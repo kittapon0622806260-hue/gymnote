@@ -3,14 +3,63 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link href="/assets/style.css" rel="stylesheet">
+  <link href="/src/style.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gymnote</title>
 </head>
-<body>
-  <header>
-    
-  </header>
+
+<body class="m-0 p-0 box-border">
+  <main class="grid grid-cols-[300px_1fr] ">
+    <aside class="bg-[#06080C] border-r-1 border-[#8F9CAE]/10 h-screen">
+      <div class="flex items-center p-5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#22C55E]" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m6.5 6.5 11 11" />
+          <path d="m21 21-1-1" />
+          <path d="m3 3 1 1" />
+          <path d="m18 22 4-4" />
+          <path d="m2 6 4-4" />
+          <path d="m3 10 7-7" />
+          <path d="m14 21 7-7" />
+        </svg>
+        <span class="text-2xl text-[#fff] font-bold">GymNote</span>
+      </div>
+      <ul>
+        <li class="p-4 hover:bg-[#8F9CAE]/10 text-[#8F9CAE] hover:text-[#22C55E] transition delay-50"><a href=#
+            class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+              fill="currentColor" class="size-6">
+              <path
+                d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+              <path
+                d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+            </svg>
+            Home</a>
+        </li>
+        <li class="p-4 hover:bg-[#8F9CAE]/10 text-[#8F9CAE] hover:text-[#22C55E] transition delay-50"><a href=#
+            class="flex items-center gap-3"><svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-[#8F9CAE]"
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="m6.5 6.5 11 11" />
+              <path d="m21 21-1-1" />
+              <path d="m3 3 1 1" />
+              <path d="m18 22 4-4" />
+              <path d="m2 6 4-4" />
+              <path d="m3 10 7-7" />
+              <path d="m14 21 7-7" />
+            </svg>Workouts</a></li>
+        <li class="p-4 hover:bg-[#8F9CAE]/10 text-[#8F9CAE] hover:text-[#22C55E] transition delay-50"><a href=#
+            class="flex items-center gap-3">History</a></li>
+        <li class="p-4 hover:bg-[#8F9CAE]/10 text-[#8F9CAE] hover:text-[#22C55E] transition delay-50"><a href=#
+            class="flex items-center gap-3">Profile</a></li>
+    </aside>
+    <section class="bg-[#090B10] h-screen">
+      <div>
+        <span>Home</span>
+        <div id="date-now"></div>
+      </div>
+    </section>
+  </main>
+  <script src="/src/index.js" type="module"></script>
 </body>
 
 
