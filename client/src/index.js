@@ -1,5 +1,14 @@
-function timenow () {
+function timenow() {
     let now = new Date();
-    document.getElementById("date-now").textContent = now.toLocaleDateString('th-TH');
+
+    // ตั้งค่าแสดงผลแบบ ภาษาอังกฤษ (en-US)
+    const options = {
+        weekday: 'long',  // แสดงชื่อวันแบบเต็ม เช่น Tuesday
+        month: 'short',   // แสดงชื่อเดือนแบบย่อ เช่น Oct
+        day: 'numeric'    // แสดงวันที่ เช่น 24
+    };
+
+    document.getElementById("date-now").textContent = now.toLocaleDateString('en-US', options);
 }
+
 timenow();

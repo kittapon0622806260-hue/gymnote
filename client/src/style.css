@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Space Grotesk', sans-serif;
+}
+
+/* บังคับใช้ทุก element */
+* {
+  font-family: var(--font-sans);
+}
+
 :root {
   --text: #6b6375;
   --text-h: #08060d;
