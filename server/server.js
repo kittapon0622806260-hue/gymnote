@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-    
+
+app.use('/api/workouts', workoutRoutes);
+
 const connectDB = require('./config/db');
 connectDB();
 
