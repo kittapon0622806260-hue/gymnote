@@ -13,3 +13,14 @@ function timenow() {
 
 timenow();
 
+
+const titleMon = document.getElementById("title-mon");
+const descMon = document.getElementById("desc-mon");
+
+if (!data.mon) {
+  titleMon.textContent = "ไม่มีข้อมูล";
+  descMon.textContent = "-";
+} else {
+  titleMon.textContent = data.mon.title;
+  descMon.textContent = `${data.mon.count} Exercises`;
+}
