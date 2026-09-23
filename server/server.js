@@ -2,16 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const workoutRoutes = require('./routes/workoutRoutes');
 
-app.use('/api/workouts', workoutRoutes);
+const app = express();
 
 const connectDB = require('./config/db');
 connectDB();
 
-const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/workouts', workoutRoutes);
 
 
 const PORT = process.env.PORT || 5000;

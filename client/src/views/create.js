@@ -56,3 +56,47 @@ exercisesContainer?.addEventListener('click', (e) => {
         }
     }
 });
+
+const form = document.getElementById('workout-form');
+
+async function createWorkout(e) {
+    e.preventDefault();
+
+    const workoutName = {
+        title : document.getElementById('routine-name').value,
+        day : document.getElementById('target-day').value,
+        target : document.getElementById('target-muscles').value,
+        exercises : [{
+            name : document.getElementById('exercise-name').value,
+            sets : document.getElementById('exercise-sets').value,
+            reps : document.getElementById('exercise-reps').value,
+            weight : document.getElementById('exercise-weight').value
+        }]
+    }
+
+    try {
+        const response = await fetch('http://localhost:5000/api/workouts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(workoutName)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            alert('สร้างตารางฝึกเรียบร้อยแล้ว');
+            window.location.href = '/workouts';
+        }
+    } catch (error) {
+        console.error('Error creating workout:', error);
+        alert('เกิดข้อผิดพลาดในการสร้างตารางฝึก');
+    }
+}
+
+
+form.addEventListener('submit', createWorkout);
+
+
+

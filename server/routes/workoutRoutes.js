@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Workout = require('../models/workout');
 
-// @route   POST /api/workouts
-// @desc    สร้างตารางออกกำลังกายใหม่
-// @access  Public
 router.post('/', async (req, res) => {
     try {
         const { title, day, target, exercises } = req.body;
