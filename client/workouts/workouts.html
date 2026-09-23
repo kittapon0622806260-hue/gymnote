@@ -11,12 +11,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
         rel="stylesheet">
     <title>gymnote</title>
+    <style>
+        /* ซ่อน Scrollbar แนวนอนทั้งหมดในหน้านี้ */
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        * {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+    </style>
 </head>
 
 <body class="m-0 p-0 box-border font-sans">
     <main class="grid grid-cols-[285px_1fr]  min-h-screen">
         <load src="/src/components/sidebar.html" />
-        <section class="bg-[#090B10] min-h-screen pb-32 p-8">
+        <section class="bg-[#090B10] min-h-screen pb-32 p-8 min-w-0">
             <div class="flex items-center justify-between pb-7 border-b-1 border-[#8F9CAE]/10">
                 <div>
                     <span class="text-[#fff] text-xl font-bold">Workouts</span>
@@ -80,6 +93,10 @@
 
                 </div>
 
+            </div>
+            <div class="w-full overflow-x-auto pb-4 mt-10 scrollbar-thin">
+                <div id="workout-container" class="flex gap-4 w-max">
+                </div>
             </div>
             <div class="text-xl font-bold text-white tracking-wide mt-10">
                 Weekly Schedule

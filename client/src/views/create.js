@@ -26,15 +26,19 @@ addExerciseBtn?.addEventListener('click', () => {
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="md:col-span-1 space-y-1">
                     <label class="block text-[11px] text-[#8F9CAE]">ชื่อท่าเล่น *</label>
-                    <input type="text" placeholder="เช่น Incline Dumbbell Press" required class="exercise-name w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
+                    <input id="exercise-name" type="text" placeholder="เช่น Incline Dumbbell Press" required class=" w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
                 </div>
                 <div class="space-y-1">
                     <label class="block text-[11px] text-[#8F9CAE]">จำนวนเซ็ต (Sets)</label>
-                    <input type="number" min="1" value="3" class="exercise-sets w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
+                    <input id="exercise-sets" type="number" min="1" value="3" class=" w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
                 </div>
                 <div class="space-y-1">
                     <label class="block text-[11px] text-[#8F9CAE]">จำนวนครั้ง (Reps)</label>
-                    <input type="text" placeholder="เช่น 10-12" value="10-12" class="exercise-reps w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
+                    <input id="exercise-reps"   type="text" placeholder="เช่น 10-12" value="10-12" class=" w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
+                </div>
+                <div class="space-y-1">
+                    <label class="block text-[11px] text-[#8F9CAE]">น้ำหนัก Kg</label>
+                    <input id="exercise-weight" type="text" placeholder="เช่น 10 kg"  class=" w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
                 </div>
             </div>
         </div>
