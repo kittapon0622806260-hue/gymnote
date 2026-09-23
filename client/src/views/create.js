@@ -23,22 +23,22 @@ addExerciseBtn?.addEventListener('click', () => {
                 <button type="button" class="remove-exercise-btn text-xs text-[#8F9CAE] hover:text-red-400 transition cursor-pointer">ลบรายการ</button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="exercise-card grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="md:col-span-1 space-y-1">
                     <label class="block text-[11px] text-[#8F9CAE]">ชื่อท่าเล่น *</label>
-                    <input id="exercise-name" type="text" placeholder="เช่น Incline Dumbbell Press" required class=" w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
+                    <input id="exercise-name" type="text" placeholder="เช่น Incline Dumbbell Press" required class="exercise-name w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
                 </div>
                 <div class="space-y-1">
                     <label class="block text-[11px] text-[#8F9CAE]">จำนวนเซ็ต (Sets)</label>
-                    <input id="exercise-sets" type="number" min="1" value="3" class=" w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
+                    <input id="exercise-sets" type="number" min="1" value="3" class="exercise-sets w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
                 </div>
                 <div class="space-y-1">
                     <label class="block text-[11px] text-[#8F9CAE]">จำนวนครั้ง (Reps)</label>
-                    <input id="exercise-reps"   type="text" placeholder="เช่น 10-12" value="10-12" class=" w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
+                    <input id="exercise-reps"   type="text" placeholder="เช่น 10-12" value="10-12" class="exercise-reps w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
                 </div>
                 <div class="space-y-1">
                     <label class="block text-[11px] text-[#8F9CAE]">น้ำหนัก Kg</label>
-                    <input id="exercise-weight" type="text" placeholder="เช่น 10 kg"  class=" w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
+                    <input id="exercise-weight" type="text" placeholder="เช่น 10 kg"  class="exercise-weight w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
                 </div>
             </div>
         </div>
@@ -66,16 +66,23 @@ const form = document.getElementById('workout-form');
 async function createWorkout(e) {
     e.preventDefault();
 
-    const workoutName = {
+    const exerciseCards = document.querySelectorAll('.exercise-card');
+
+    const exercise = Array.from(exerciseCards).map(card => {
+        return {
+            name : card.querySelector('.exercise-name').value,
+            sets : card.querySelector('.exercise-sets').value,
+            reps : card.querySelector('.exercise-reps').value,
+            weight : card.querySelector('.exercise-weight').value
+        }
+    })
+    console.log(exercise)
+
+    const workoutData = {
         title : document.getElementById('routine-name').value,
         day : document.getElementById('target-day').value,
         target : document.getElementById('target-muscles').value,
-        exercises : [{
-            name : document.getElementById('exercise-name').value,
-            sets : document.getElementById('exercise-sets').value,
-            reps : document.getElementById('exercise-reps').value,
-            weight : document.getElementById('exercise-weight').value
-        }]
+        exercises : exercise
     }
 
     try {
@@ -84,7 +91,7 @@ async function createWorkout(e) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(workoutName)
+            body: JSON.stringify(workoutData)
         });
 
         const result = await response.json();
