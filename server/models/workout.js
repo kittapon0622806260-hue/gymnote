@@ -14,11 +14,6 @@ const exerciseSchema = new mongoose.Schema({
         type: Number,
         required: [true, 'Please add a number of reps'],
         default: 1
-    },
-    weight: {
-        type: Number,
-        required: [true, 'Please add a weight'],
-        default: 0
     }
 })
 

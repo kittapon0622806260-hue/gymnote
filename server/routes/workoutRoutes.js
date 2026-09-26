@@ -39,9 +39,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-// @route   GET /api/workouts
-// @desc    ดึงรายการตารางออกกำลังกายทั้งหมด
-// @access  Public
+
 router.get('/', async (req, res) => {
     try {
         // ดึงข้อมูลทั้งหมดและเรียงลำดับตามเวลาที่สร้างล่าสุด
@@ -61,4 +59,41 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:id', async (req, res) => {
+    try {
+        const workout = await Workout.findById(req.params.id);
+
+        if (!workout) {
+            return res.status(404).json({ message: 'ไม่พบข้อมูล Routine นี้' });
+        }
+        res.json(workout);
+    } catch (error) {
+        res.status(500).json({ message: 'เกิดข้อผิดพลาดในการดึงข้อมูล', error: error.message });
+    }
+})
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedWorkout = await Workout.findByIdAndDelete(id);
+
+        if (!deletedWorkout) {
+            return res.status(404).json({
+                success: false,
+                message: 'ไม่พบข้อมูลที่ต้องการลบ'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'ลบข้อมูลสำเร็จ'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'เกิดข้อผิดพลาดในการลบข้อมูล',
+            error: error.message
+        });
+    }
+});
 module.exports = router;

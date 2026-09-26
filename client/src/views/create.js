@@ -36,10 +36,6 @@ addExerciseBtn?.addEventListener('click', () => {
                     <label class="block text-[11px] text-[#8F9CAE]">จำนวนครั้ง (Reps)</label>
                     <input id="exercise-reps"   type="text" placeholder="เช่น 10-12" value="10-12" class="exercise-reps w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
                 </div>
-                <div class="space-y-1">
-                    <label class="block text-[11px] text-[#8F9CAE]">น้ำหนัก Kg</label>
-                    <input id="exercise-weight" type="text" placeholder="เช่น 10 kg"  class="exercise-weight w-full bg-[#06080C] border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#22C55E]" />
-                </div>
             </div>
         </div>
         `;
@@ -72,8 +68,7 @@ async function createWorkout(e) {
         return {
             name : card.querySelector('.exercise-name').value,
             sets : card.querySelector('.exercise-sets').value,
-            reps : card.querySelector('.exercise-reps').value,
-            weight : card.querySelector('.exercise-weight').value
+            reps : card.querySelector('.exercise-reps').value
         }
     })
     console.log(exercise)
