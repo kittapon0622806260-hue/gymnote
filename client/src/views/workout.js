@@ -27,7 +27,10 @@ async function fetchWorkouts() {
     });
     const result = await response.json();
     if (result.success && result.data.length > 0) {
-      emptyState.style.display = "none"; // ซ่อนข้อความ "ไม่มีข้อมูล"
+      // มีข้อมูล: แสดง container การ์ด และซ่อน emptyState
+      emptyState.style.display = "none";
+      workoutContainer.style.display = "flex"; // หรือ "grid" ตาม CSS Layout ที่ใช้
+
       const card = result.data.map(workout => {
         return `<div class="w-[320px] min-w-[340px] md:min-w-[380px] shrink-0 bg-[#0F172A] border-2 border-slate-700/60 rounded-2xl p-6 snap-center space-y-4 shadow-xl">
   <!-- ส่วน Header ของการ์ด -->
@@ -72,7 +75,7 @@ async function fetchWorkouts() {
     </div>
   </div>
 
-  <!-- ส่วนแสดงรายการท่าฝึก (Exercises List) - ตัดส่วน (undefined kg) ออกแล้ว -->
+  <!-- ส่วนแสดงรายการท่าฝึก (Exercises List) -->
   <div class="space-y-2.5">
     ${workout.exercises.map(ex => `
       <div class="flex items-center justify-between text-sm py-3 px-4 bg-slate-800/90 border border-slate-700 rounded-xl shadow-sm">
@@ -82,11 +85,14 @@ async function fetchWorkouts() {
     `).join('')}
   </div>
 </div>`;
-
       }).join('');
+
       workoutContainer.innerHTML = card;
     } else {
-      emptyState.style.display = "block"; // แสดงข้อความ "ไม่มีข้อมูล"
+      // ไม่มีข้อมูล: ล้าง HTML การ์ดเดิม ซ่อน container และแสดง emptyState
+      workoutContainer.innerHTML = "";
+      workoutContainer.style.display = "none";
+      emptyState.style.display = "block";
     }
 
   } catch (error) {

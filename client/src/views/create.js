@@ -93,7 +93,7 @@ async function createWorkout(e) {
 
         if (result.success) {
             alert('สร้างตารางฝึกเรียบร้อยแล้ว');
-            window.location.href = '/workouts';
+            window.location.href = 'workouts.html';
         }
     } catch (error) {
         console.error('Error creating workout:', error);

@@ -39,6 +39,25 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, day, target, exercises } = req.body;
+
+        const updatedWorkout = await Workout.findByIdAndUpdate(
+            id,
+            { title, day, target, exercises },
+            { new: true }
+        )
+        if (!updatedWorkout) {
+            return res.status(404).json({ message: 'ไม่พบข้อมูลโปรแกรมนี้' });
+        }
+        res.status(200).json(updatedWorkout);
+    } catch (error) {
+        console.error('Update Error:', error);
+        res.status(500).json({ message: 'เกิดข้อผิดพลาดในการอัปเดตข้อมูล', error: error.message });
+    }
+})
 
 router.get('/', async (req, res) => {
     try {

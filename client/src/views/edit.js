@@ -3,31 +3,31 @@ const urlParams = new URLSearchParams(window.location.search);
 const workoutId = urlParams.get('id');
 
 if (workoutId) {
-    Edit(workoutId);
+  Edit(workoutId);
 }
 
 async function Edit(id) {
-    try {
-        const res = await fetch(`http://localhost:5000/api/workouts/${id}`);
-        const data = await res.json();
+  try {
+    const res = await fetch(`http://localhost:5000/api/workouts/${id}`);
+    const data = await res.json();
 
-        if (res.ok) {
-           
-            const nameInput = document.getElementById('routine-name');
-            const daySelect = document.getElementById('target-day');
-            const targetInput = document.getElementById('target-muscles');
+    if (res.ok) {
 
-            if (nameInput) nameInput.value = data.title || '';
-            if (daySelect) daySelect.value = data.day ;
-            if (targetInput) targetInput.value = data.target || '';
+      const nameInput = document.getElementById('routine-name');
+      const daySelect = document.getElementById('target-day');
+      const targetInput = document.getElementById('target-muscles');
 
-           
-            const container = document.getElementById('exercises-container') 
-            container.innerHTML = '';
+      if (nameInput) nameInput.value = data.title || '';
+      if (daySelect) daySelect.value = data.day;
+      if (targetInput) targetInput.value = data.target || '';
 
-            if (data.exercises && Array.isArray(data.exercises)) {
-                data.exercises.forEach((ex, index) => {
-                    const itemHtml = `
+
+      const container = document.getElementById('exercises-container')
+      container.innerHTML = '';
+
+      if (data.exercises && Array.isArray(data.exercises)) {
+        data.exercises.forEach((ex, index) => {
+          const itemHtml = `
             <div class="exercise-item bg-white/5 border border-white/5 rounded-xl p-4 space-y-4 mb-4">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-bold text-[#22C55E] bg-[#22C55E]/10 px-2.5 py-1 rounded-md">
@@ -56,11 +56,66 @@ async function Edit(id) {
               </div>
             </div>
           `;
-                    container.insertAdjacentHTML('beforeend', itemHtml);
-                });
-            }
-        }
-    } catch (error) {
-        console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+          container.insertAdjacentHTML('beforeend', itemHtml);
+        });
+      }
     }
+  } catch (error) {
+    console.error('เกิดข้อผิดพลาดในการดึงข้อมูล:', error);
+  }
+}
+
+
+const workoutForm = document.getElementById('workout-form');
+
+if (workoutForm) {
+  workoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+
+    const title = document.getElementById('routine-name')?.value;
+    const day = document.getElementById('target-day')?.value;
+    const target = document.getElementById('target-muscles')?.value;
+
+    const exerciseItem = document.querySelectorAll('.exercise-item');
+    const exercises = [];
+
+    exerciseItem.forEach((item) => {
+      const name = item.querySelector('.exercise-name')?.value;
+      const sets = item.querySelector('.exercise-sets')?.value;
+      const reps = item.querySelector('.exercise-reps')?.value;
+
+      if (name) {
+        exercises.push({
+          name: name,
+          sets: Number(sets) || 0,
+          reps: reps || ''
+        });
+      }
+    });
+
+    const updatedData = { title, day, target, exercises };
+    
+    try {
+      // 2. ส่ง workoutId ไปที่ URL
+      const res = await fetch(`http://localhost:5000/api/workouts/${workoutId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedData)
+      });
+
+      if (res.ok) {
+        alert('อัปเดตโปรแกรมออกกำลังกายเรียบร้อยแล้ว!');
+        window.location.href = 'workouts.html';
+      } else {
+        const errorData = await res.json();
+        alert(`เกิดข้อผิดพลาด: ${errorData.message || 'ไม่สามารถบันทึกได้'}`);
+      }
+    } catch (error) {
+      console.error('เกิดข้อผิดพลาดในการบันทึก:', error);
+      alert('ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้');
+    }
+  });
 }
