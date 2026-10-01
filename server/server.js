@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const workoutRoutes = require('./routes/workoutRoutes');
 
+
 const app = express();
 
 const connectDB = require('./config/db');

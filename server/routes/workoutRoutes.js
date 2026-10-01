@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Workout = require('../models/workout');
+const WorkoutLog = require('../models/workoutLog')
 
 router.post('/', async (req, res) => {
     try {
@@ -38,6 +39,8 @@ router.post('/', async (req, res) => {
         });
     }
 });
+
+
 
 router.put('/:id', async (req, res) => {
     try {
@@ -115,4 +118,31 @@ router.delete('/:id', async (req, res) => {
         });
     }
 });
+
+router.post('/workout-logs', async (req, res) => {
+    try {
+        const { workoutId, title, exercises, completedAt } = req.body;
+
+        const newLog = new WorkoutLog({
+            workoutId,
+            title,
+            exercises,
+            completedAt: completedAt || new Date()
+        });
+
+        await newLog.save();
+
+        res.status(201).json({
+            message: 'บันทึกประวัติเรียบร้อยแล้ว',
+            log: newLog
+        });
+    } catch (error) {
+        console.error('Error saving log:', error);
+        res.status(500).json({
+            message: 'เกิดข้อผิดพลาดในการบันทึกประวัติ',
+            error: error.message
+        });
+    }
+});
+
 module.exports = router;
