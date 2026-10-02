@@ -37,10 +37,21 @@
                     <span id="title" class="text-3xl font-bold   text-[#22C55E] tracking-tight"></span>
                     <span id="target" class="text-lg font-medium text-slate-400 ml-3"></span>
                 </div>
+                <div class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-2xl">
+                    <span class="text-xs text-slate-400 font-semibold">Rest Default:</span>
+                    <select id="default-rest-select" onchange="changeDefaultRestTime(this.value)"
+                        class="bg-slate-800 text-emerald-400 text-xs font-bold px-2 py-1 rounded-lg border border-slate-700 focus:outline-none cursor-pointer">
+                        <option value="30">30s</option>
+                        <option value="60" selected>60s</option>
+                        <option value="90">90s</option>
+                        <option value="120">120s</option>
+                    </select>
+                </div>
             </div>
 
 
             <div class="flex items-center gap-4">
+
                 <!-- Active Workout Timer -->
                 <div
                     class="flex items-center gap-2.5 bg-slate-900/90 border border-slate-800 px-4 py-2 rounded-2xl shadow-inner">
@@ -107,6 +118,47 @@
 
     </main>
 
+    <!-- Rest Timer Modal -->
+    <div id="rest-modal"
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden">
+        <div
+            class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-sm mx-4 text-center shadow-2xl relative">
 
+            <!-- Title -->
+            <div class="flex items-center justify-center mb-2">
+                <span class="text-xs uppercase tracking-wider font-semibold text-emerald-400">⏱️ Rest Timer</span>
+            </div>
+
+            <!-- Timer Display -->
+            <div class="my-6">
+                <span id="modal-timer-display"
+                    class="font-mono text-6xl font-extrabold text-white tracking-widest">01:00</span>
+            </div>
+
+            <!-- Quick Add Time Buttons (+15s, +30s, +60s) -->
+            <div class="grid grid-cols-3 gap-2 mb-6">
+                <button onclick="addRestTime(15)"
+                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-sm">
+                    +15s
+                </button>
+                <button onclick="addRestTime(30)"
+                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-sm">
+                    +30s
+                </button>
+                <button onclick="addRestTime(60)"
+                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-sm">
+                    +60s
+                </button>
+            </div>
+
+            <!-- Skip Button -->
+            <button onclick="skipRestTimer()"
+                class="w-full bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all text-base">
+                Skip Rest (ข้ามเวลาพัก)
+            </button>
+
+        </div>
+    </div>
+    </div>
     <script type="module" src="/src/views/saveR.js"> </script>
 </body>

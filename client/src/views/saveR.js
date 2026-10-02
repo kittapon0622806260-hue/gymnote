@@ -1,7 +1,7 @@
 
 let activeworkout = null;
 
-
+//ดึงข้อมูล
 async function Save(id) {
     try {
         const res = await fetch(`http://localhost:5000/api/workouts/${id}`);
@@ -49,23 +49,46 @@ function handleCheckSet(exIdx, setIdx) {
     if (!activeworkout || !activeworkout.exercises[exIdx]?.sets[setIdx]) return;
 
     const setObj = activeworkout.exercises[exIdx].sets[setIdx];
-    const btn = document.getElementById(`check-btn-${exIdx}-${setIdx}`);
-    const row = document.getElementById(`set-row-${exIdx}-${setIdx}`);
 
-    setObj.isCompleted = !setObj.isCompleted;
+    
+    if (!setObj.isCompleted) {
+        
+        const weightInput = document.getElementById(`weight-input-${exIdx}-${setIdx}`);
+        const repsInput = document.getElementById(`reps-input-${exIdx}-${setIdx}`);
 
-    if (setObj.isCompleted) {
-        if (btn) btn.className = "w-8 h-8 rounded-lg bg-emerald-500 border border-emerald-300 text-slate-950 font-black flex items-center justify-center transition-all";
-        if (row) row.className = "grid grid-cols-12 gap-3 items-center bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 mb-2.5 transition-all";
-    } else {
-        if (btn) btn.className = "w-8 h-8 rounded-lg border border-slate-600 bg-slate-800/80 text-slate-400 hover:border-emerald-500 flex items-center justify-center transition-all";
-        if (row) row.className = "grid grid-cols-12 gap-3 items-center bg-[#0b0f19] hover:bg-[#111827] p-2.5 rounded-xl border border-slate-800/80 mb-2.5 transition-all";
+       
+        const weightVal = weightInput ? weightInput.value.trim() : String(setObj.weight ?? '').trim();
+        const repsVal = repsInput ? repsInput.value.trim() : String(setObj.reps ?? '').trim();
+
+       
+        if (!weightVal || !repsVal || Number(weightVal) <= 0 || Number(repsVal) <= 0) {
+            alert('กรุณากรอกค่าน้ำหนัก (KG) และจำนวนครั้ง (REPS) ให้ถูกต้องก่อนกดติ๊กถูกครับ!');
+            return;
+        }
+
+        
+        setObj.weight = Number(weightVal);
+        setObj.reps = Number(repsVal);
     }
 
     
+    setObj.isCompleted = !setObj.isCompleted;
+
+    const btn = document.getElementById(`check-btn-${exIdx}-${setIdx}`);
+    const row = document.getElementById(`set-row-${exIdx}-${setIdx}`);
+
+    
+    if (setObj.isCompleted) {
+        if (btn) btn.className = "w-8 h-8 rounded-lg bg-emerald-500 border border-emerald-300 text-slate-950 font-bold flex items-center justify-center transition-all cursor-pointer";
+        if (row) row.className = "grid grid-cols-12 gap-3 items-center bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 transition-all";
+        start();
+    } else {
+        if (btn) btn.className = "w-8 h-8 rounded-lg border border-slate-600 bg-slate-800/80 text-slate-400 hover:border-slate-500 flex items-center justify-center transition-all cursor-pointer";
+        if (row) row.className = "grid grid-cols-12 gap-3 items-center bg-[#0b0f19] hover:bg-[#111827] p-2.5 rounded-xl border border-slate-800 transition-all";
+    }
 }
 
-
+//เรนเดอการ์ด
 function renderExerciseCards(exercises) {
     const container = document.getElementById('exercise-container');
     if (!container) return;
@@ -83,6 +106,7 @@ function renderExerciseCards(exercises) {
         </div>
         <div class="col-span-3">
           <input type="number" 
+                 id="weight-input-${exIdx}-${setIdx}"
                  placeholder="0" 
                  value="${set.weight}" 
                  oninput="updateSetData(${exIdx}, ${setIdx}, 'weight', this.value)" 
@@ -90,6 +114,7 @@ function renderExerciseCards(exercises) {
         </div>
         <div class="col-span-2">
           <input type="number" 
+                 id= "weight-input-${exIdx}-${setIdx}"
                  placeholder="0" 
                  value="${set.reps}" 
                  oninput="updateSetData(${exIdx}, ${setIdx}, 'reps', this.value)" 
@@ -135,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (workoutId) Save(workoutId);
 });
 
-
+// ปุ่ม finish
 async function finishWorkout() {
     if (!activeworkout) {
         alert('ไม่พบข้อมูลการออกกำลังกาย');
@@ -145,7 +170,7 @@ async function finishWorkout() {
 
     for (const ex of activeworkout.exercises) {
         for (const set of ex.sets) {
-            
+
             if (set.isCompleted && (set.weight !== '' || set.reps !== '')) {
                 hasValidSet = true;
                 break;
@@ -193,6 +218,8 @@ window.handleCheckSet = handleCheckSet;
 window.Save = Save;
 window.finishWorkout = finishWorkout;
 
+
+//ปุ่ม back
 const back = document.getElementById('back-btn');
 const exit = document.getElementById('exit-modal');
 const modal = document.getElementById('modal-card');
@@ -223,6 +250,7 @@ if (confirm) {
 };
 
 
+//นาฬิกาจับเวลาทั้งหมด
 let startTime = null;
 let active = null;
 
@@ -255,3 +283,71 @@ function timer() {
 document.addEventListener('DOMContentLoaded', () => {
     timer();
 });
+
+//นาฬิกาจับเวลาระหว่างเซต
+let restTimerInterval = null;
+let restTimeRemaining = 0;
+let defaultRestTime = 60;
+
+function changeDefaultRestTime(val) {
+    defaultRestTime = parseInt(val, 10);
+}
+
+function updateTimer() {
+    const display = document.getElementById('modal-timer-display');
+    if (!display) return;
+    const mins = Math.floor(restTimeRemaining / 60);
+    const secs = restTimeRemaining % 60;
+    display.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+
+function start() {
+    clearInterval(restTimerInterval);
+    restTimeRemaining = defaultRestTime;
+
+
+    updateTimer();
+
+
+    const modal = document.getElementById('rest-modal');
+    if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+    }
+
+    restTimerInterval = setInterval(() => {
+        restTimeRemaining--;
+
+        if (restTimeRemaining <= 0) {
+            skipRestTimer();
+        } else {
+            updateTimer();
+        }
+    }, 1000)
+
+}
+
+function addRestTime(seconds) {
+    if (restTimeRemaining > 0) {
+        restTimeRemaining += seconds;
+        updateTimer();
+    }
+}
+
+// กดข้ามเวลาพัก / ปิด Modal
+function skipRestTimer() {
+    clearInterval(restTimerInterval);
+    restTimeRemaining = 0;
+
+    const modal = document.getElementById('rest-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }
+}
+
+
+window.changeDefaultRestTime = changeDefaultRestTime;
+window.addRestTime = addRestTime;
+window.skipRestTimer = skipRestTimer;
