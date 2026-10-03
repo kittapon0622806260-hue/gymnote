@@ -121,11 +121,12 @@ router.delete('/:id', async (req, res) => {
 
 router.post('/workout-logs', async (req, res) => {
     try {
-        const { workoutId, title, exercises, completedAt } = req.body;
+        const { workoutId, title, duration, exercises, completedAt } = req.body;
 
         const newLog = new WorkoutLog({
             workoutId,
             title,
+            duration: duration || '00:00:00',
             exercises,
             completedAt: completedAt || new Date()
         });

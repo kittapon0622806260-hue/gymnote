@@ -1,23 +1,28 @@
 const mongoose = require('mongoose');
 
 const workoutLog = new mongoose.Schema({
-    
+
     workoutId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Workout',
         required: true
     },
-   
+
     title: {
         type: String,
         required: true
     },
-    
+
+    duration: {
+        type: String,
+        default: "00:00:00" 
+    },
+
     completedAt: {
         type: Date,
         default: Date.now
     },
-    
+
     exercises: [
         {
             exerciseId: String,

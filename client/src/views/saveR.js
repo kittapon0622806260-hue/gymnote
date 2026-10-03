@@ -50,34 +50,34 @@ function handleCheckSet(exIdx, setIdx) {
 
     const setObj = activeworkout.exercises[exIdx].sets[setIdx];
 
-    
+
     if (!setObj.isCompleted) {
-        
+
         const weightInput = document.getElementById(`weight-input-${exIdx}-${setIdx}`);
         const repsInput = document.getElementById(`reps-input-${exIdx}-${setIdx}`);
 
-       
+
         const weightVal = weightInput ? weightInput.value.trim() : String(setObj.weight ?? '').trim();
         const repsVal = repsInput ? repsInput.value.trim() : String(setObj.reps ?? '').trim();
 
-       
+
         if (!weightVal || !repsVal || Number(weightVal) <= 0 || Number(repsVal) <= 0) {
             alert('กรุณากรอกค่าน้ำหนัก (KG) และจำนวนครั้ง (REPS) ให้ถูกต้องก่อนกดติ๊กถูกครับ!');
             return;
         }
 
-        
+
         setObj.weight = Number(weightVal);
         setObj.reps = Number(repsVal);
     }
 
-    
+
     setObj.isCompleted = !setObj.isCompleted;
 
     const btn = document.getElementById(`check-btn-${exIdx}-${setIdx}`);
     const row = document.getElementById(`set-row-${exIdx}-${setIdx}`);
 
-    
+
     if (setObj.isCompleted) {
         if (btn) btn.className = "w-8 h-8 rounded-lg bg-emerald-500 border border-emerald-300 text-slate-950 font-bold flex items-center justify-center transition-all cursor-pointer";
         if (row) row.className = "grid grid-cols-12 gap-3 items-center bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 transition-all";
@@ -185,6 +185,9 @@ async function finishWorkout() {
         return;
     }
 
+    const timerElement = document.getElementById('active-timer');
+    const durationText = timerElement ? timerElement.textContent.trim() : '00:00:00';
+
     try {
         // ยิง POST ไปที่ Endpoint สำหรับเก็บประวัติ
         const res = await fetch('http://localhost:5000/api/workouts/workout-logs', {
@@ -195,6 +198,7 @@ async function finishWorkout() {
             body: JSON.stringify({
                 workoutId: activeworkout.Id,
                 title: activeworkout.title,
+                duration: durationText,
                 exercises: activeworkout.exercises,
                 completedAt: new Date(),
             }),
