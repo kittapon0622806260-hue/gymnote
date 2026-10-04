@@ -12,3 +12,27 @@ function timenow() {
 }
 
 timenow();
+
+async function loadDash() {
+    try {
+        const res = await fetch('http://localhost:5000/api/dashboard')
+        if (!res.ok) throw new Error('Failed to fetch stats');
+
+        const data = await res.json();
+
+        const timeTotal = document.getElementById('workouts-stat-time')
+        if (timeTotal) {
+            timeTotal.textContent = data.timeTotal || "0m" ;
+        }
+
+        const workoutsDay = document.getElementById('workouts-stat-days');
+        if (workoutsDay) {
+            workoutsDay.textContent = `${data.daysTrained} / ${data.targetDays}`;
+        }
+    } catch (error) {
+        console.error('Error loading dashboard stats:', error);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', loadDash);

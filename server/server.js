@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const workoutRoutes = require('./routes/workoutRoutes');
 const history = require('./routes/historyRoutes');
+const dashBoard = require('./routes/dashboard');
 
 
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json());
 
 app.use('/api/workouts', workoutRoutes); 
 app.use('/api/history', history);
+app.use('/api/dashboard', dashBoard)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
