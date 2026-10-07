@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 
 const workoutLog = new mongoose.Schema({
 
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true // บังคับให้ทุก Log ต้องระบุผู้สร้าง  
+    },
+
     workoutId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Workout',
@@ -15,7 +21,7 @@ const workoutLog = new mongoose.Schema({
 
     duration: {
         type: String,
-        default: "00:00:00" 
+        default: "00:00:00"
     },
 
     completedAt: {

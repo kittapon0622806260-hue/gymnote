@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Workout = require('../models/workout');
 const WorkoutLog = require('../models/workoutLog')
+const auth = require('../middleware/auth'); // นำเข้า middleware
 
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     try {
         const { title, day, target, exercises } = req.body;
 
@@ -42,7 +43,7 @@ router.post('/', async (req, res) => {
 
 
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', auth, async (req, res) => {
     try {
         const { id } = req.params;
         const { title, day, target, exercises } = req.body;
@@ -62,7 +63,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
         // ดึงข้อมูลทั้งหมดและเรียงลำดับตามเวลาที่สร้างล่าสุด
         const workouts = await Workout.find().sort({ createdAt: -1 });
@@ -81,7 +82,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', auth, async (req, res) => {
     try {
         const workout = await Workout.findById(req.params.id);
 
@@ -94,7 +95,7 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', auth, async (req, res) => {
     try {
         const { id } = req.params;
         const deletedWorkout = await Workout.findByIdAndDelete(id);
@@ -119,7 +120,7 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.post('/workout-logs', async (req, res) => {
+router.post('/workout-logs', auth, async (req, res) => {
     try {
         const { workoutId, title, duration, exercises, completedAt } = req.body;
 

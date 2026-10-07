@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const WorkoutLog = require('../models/workoutLog');
+const auth = require('../middleware/auth'); // นำเข้า middleware
 
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
         const logs = await WorkoutLog.find().sort({ completedAt: -1 }).limit(10);
         res.json(logs);

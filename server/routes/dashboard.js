@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const WorkoutLog = require('../models/workoutLog');
+const auth = require('../middleware/auth'); // นำเข้า middleware
 
 function getWeekly() {
     const now = new Date();
@@ -32,7 +33,7 @@ function parseDurationToSeconds(durationStr) {
     return (hours * 3600) + (minutes * 60) + seconds;
 }
 
-router.get('/', async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
         const { monday, sunday } = getWeekly()
 

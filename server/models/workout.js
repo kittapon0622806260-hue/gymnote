@@ -18,6 +18,11 @@ const exerciseSchema = new mongoose.Schema({
 })
 
 const workoutSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true // บังคับให้ทุก Log ต้องระบุผู้สร้าง
+    },
     title: {
         type: String,
         required: [true, 'Please add a title'],

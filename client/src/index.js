@@ -22,7 +22,7 @@ async function loadDash() {
 
         const timeTotal = document.getElementById('workouts-stat-time')
         if (timeTotal) {
-            timeTotal.textContent = data.timeTotal || "0m" ;
+            timeTotal.textContent = data.timeTotal || "0m";
         }
 
         const workoutsDay = document.getElementById('workouts-stat-days');
@@ -36,3 +36,27 @@ async function loadDash() {
 
 
 document.addEventListener('DOMContentLoaded', loadDash);
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const authButtons = document.getElementById('authButtons');
+    const userProfile = document.getElementById('userProfile');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (token) {
+        // ถ้า Login แล้ว -> ซ่อนปุ่ม Login/Register, แสดงส่วน Profile
+        if (authButtons) authButtons.classList.add('hidden');
+        if (userProfile) userProfile.classList.remove('hidden');
+    } else {
+        window.location.href = '/login.html'; 
+    }
+
+    // ปุ่ม Logout
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.reload(); // โหลดหน้าใหม่เพื่ออัปเดต UI
+        });
+    }
+});
