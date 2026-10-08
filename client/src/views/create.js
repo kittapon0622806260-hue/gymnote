@@ -66,25 +66,26 @@ async function createWorkout(e) {
 
     const exercise = Array.from(exerciseCards).map(card => {
         return {
-            name : card.querySelector('.exercise-name').value,
-            sets : card.querySelector('.exercise-sets').value,
-            reps : card.querySelector('.exercise-reps').value
+            name: card.querySelector('.exercise-name').value,
+            sets: card.querySelector('.exercise-sets').value,
+            reps: card.querySelector('.exercise-reps').value
         }
     })
     console.log(exercise)
 
     const workoutData = {
-        title : document.getElementById('routine-name').value,
-        day : document.getElementById('target-day').value,
-        target : document.getElementById('target-muscles').value,
-        exercises : exercise
+        title: document.getElementById('routine-name').value,
+        day: document.getElementById('target-day').value,
+        target: document.getElementById('target-muscles').value,
+        exercises: exercise
     }
-
+    const token = localStorage.getItem('token');
     try {
         const response = await fetch('http://localhost:5000/api/workouts', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(workoutData)
         });

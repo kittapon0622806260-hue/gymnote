@@ -8,7 +8,14 @@ if (workoutId) {
 
 async function Edit(id) {
   try {
-    const res = await fetch(`http://localhost:5000/api/workouts/${id}`);
+    const token = localStorage.getItem('token');
+    const res = await fetch(`http://localhost:5000/api/workouts/${id}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}` 
+      }
+    });
+
     const data = await res.json();
 
     if (res.ok) {
@@ -95,13 +102,14 @@ if (workoutForm) {
     });
 
     const updatedData = { title, day, target, exercises };
-    
+
     try {
-      // 2. ส่ง workoutId ไปที่ URL
+      const token = localStorage.getItem('token');
       const res = await fetch(`http://localhost:5000/api/workouts/${workoutId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
         },
         body: JSON.stringify(updatedData)
       });

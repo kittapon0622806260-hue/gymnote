@@ -6,7 +6,7 @@ const auth = require('../middleware/auth'); // นำเข้า middleware
 
 router.get('/', auth, async (req, res) => {
     try {
-        const logs = await WorkoutLog.find().sort({ completedAt: -1 }).limit(10);
+        const logs = await WorkoutLog.find({ userId: req.userId }).sort({ completedAt: -1 }).limit(10);
         res.json(logs);
     } catch (error) {
         console.error('Error fetching history:', error);

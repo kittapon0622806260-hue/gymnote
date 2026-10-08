@@ -38,6 +38,7 @@ router.get('/', auth, async (req, res) => {
         const { monday, sunday } = getWeekly()
 
         const logs = await WorkoutLog.find({
+            userId: req.userId, 
             completedAt: { $gte: monday, $lte: sunday }
         }).lean();
 

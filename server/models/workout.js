@@ -21,7 +21,7 @@ const workoutSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true // บังคับให้ทุก Log ต้องระบุผู้สร้าง
+        required: true 
     },
     title: {
         type: String,

@@ -1,61 +1,67 @@
 function timenow() {
-    let now = new Date();
+  let now = new Date();
 
-    // ตั้งค่าแสดงผลแบบ ภาษาอังกฤษ (en-US)
-    const options = {
-        weekday: 'long',  // แสดงชื่อวันแบบเต็ม เช่น Tuesday
-        month: 'short',   // แสดงชื่อเดือนแบบย่อ เช่น Oct
-        day: 'numeric'    // แสดงวันที่ เช่น 24
-    };
+  // ตั้งค่าแสดงผลแบบ ภาษาอังกฤษ (en-US)
+  const options = {
+    weekday: 'long',  // แสดงชื่อวันแบบเต็ม เช่น Tuesday
+    month: 'short',   // แสดงชื่อเดือนแบบย่อ เช่น Oct
+    day: 'numeric'    // แสดงวันที่ เช่น 24
+  };
 
-    document.getElementById("date-now").textContent = now.toLocaleDateString('en-US', options);
+  document.getElementById("date-now").textContent = now.toLocaleDateString('en-US', options);
 }
 
 timenow();
 
 document.addEventListener('DOMContentLoaded', () => {
-    History();
+  History();
 });
 
 async function History() {
-    const container = document.getElementById('history-cards');
-    if (!container) return;
+  const container = document.getElementById('history-cards');
+  if (!container) return;
 
-    try {
-        const res = await fetch('http://localhost:5000/api/history');
-        if (!res.ok) {
-            throw new Error(`Server Error (Status: ${res.status})`);
-        }
-        const logs = await res.json();
+  try {
+    const token = localStorage.getItem('token');
+    const res = await fetch('http://localhost:5000/api/history', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    if (!res.ok) {
+      throw new Error(`Server Error (Status: ${res.status})`);
+    }
+    const logs = await res.json();
 
-        if (!Array.isArray(logs) || logs.length === 0) {
-            container.innerHTML = `
+    if (!Array.isArray(logs) || logs.length === 0) {
+      container.innerHTML = `
         <div class="text-slate-500 text-center py-12 font-mono text-sm">
           NO WORKOUT HISTORY FOUND
         </div>`;
-            return;
-        }
+      return;
+    }
 
-        container.innerHTML = logs.map(log => createHistoryCardHTML(log)).join('');
-    } catch (error) {
-        console.error('Error loading history:', error);
-        container.innerHTML = `
+    container.innerHTML = logs.map(log => createHistoryCardHTML(log)).join('');
+  } catch (error) {
+    console.error('Error loading history:', error);
+    container.innerHTML = `
       <div class="text-red-400 text-center py-12 font-mono text-sm">
         FAILED TO LOAD WORKOUT HISTORY
       </div>`;
-    }
+  }
 }
 
 function createHistoryCardHTML(log) {
-    const formattedDate = new Date(log.completedAt || log.createdAt).toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric'
-    });
+  const formattedDate = new Date(log.completedAt || log.createdAt).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
 
-    const durationText = log.duration || '00:00:00';
+  const durationText = log.duration || '00:00:00';
 
-    return `
+  return `
     <div class="bg-[#111622] border border-slate-800/80 rounded-2xl p-6 shadow-xl space-y-6 mt-6">
       
       <!-- Header การ์ด -->
@@ -76,11 +82,11 @@ function createHistoryCardHTML(log) {
       <!-- รายการท่าทางที่เล่น -->
       <div class="space-y-5">
         ${(log.exercises || []).map(ex => {
-        const completedSets = (ex.sets || []).filter(s => s.isCompleted || (s.weight && s.reps));
+    const completedSets = (ex.sets || []).filter(s => s.isCompleted || (s.weight && s.reps));
 
-        if (completedSets.length === 0) return '';
+    if (completedSets.length === 0) return '';
 
-        return `
+    return `
             <div class="space-y-2">
               <h3 class="text-sm font-bold text-slate-200">${ex.name}</h3>
               <div class="flex flex-wrap gap-2">
@@ -94,7 +100,7 @@ function createHistoryCardHTML(log) {
               </div>
             </div>
           `;
-    }).join('')}
+  }).join('')}
       </div>
 
     </div>

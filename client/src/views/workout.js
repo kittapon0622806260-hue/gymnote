@@ -19,10 +19,12 @@ const workoutContainer = document.getElementById("workout-container");
 
 async function fetchWorkouts() {
   try {
+    const token = localStorage.getItem('token');
     const response = await fetch('http://localhost:5000/api/workouts', {
       method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
     });
     const result = await response.json();
@@ -151,9 +153,13 @@ confirmDelete.addEventListener('click', async () => {
   const workoutId = deleteModal.dataset.pendingId;
   if (workoutId) {
     try {
+      const token = localStorage.getItem('token');
       const respone = await fetch(`http://localhost:5000/api/workouts/${workoutId}`, {
-        method: 'DELETE'
-      })
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       if (respone.ok) {
         deleteModal.classList.add('hidden');
         deleteModal.dataset.pendingId = ''
@@ -185,7 +191,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-workoutContainer.addEventListener('click' , async (e) => {
+workoutContainer.addEventListener('click', async (e) => {
   const startBtn = e.target.closest('.start-btn');
 
   if (startBtn) {

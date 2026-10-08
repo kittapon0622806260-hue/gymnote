@@ -4,7 +4,13 @@ let activeworkout = null;
 //ดึงข้อมูล
 async function Save(id) {
     try {
-        const res = await fetch(`http://localhost:5000/api/workouts/${id}`);
+        const token = localStorage.getItem('token');
+        const res = await fetch(`http://localhost:5000/api/workouts/${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
         const data = await res.json();
 
         if (res.ok) {
@@ -189,11 +195,12 @@ async function finishWorkout() {
     const durationText = timerElement ? timerElement.textContent.trim() : '00:00:00';
 
     try {
-        // ยิง POST ไปที่ Endpoint สำหรับเก็บประวัติ
+        const token = localStorage.getItem('token');
         const res = await fetch('http://localhost:5000/api/workouts/workout-logs', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({
                 workoutId: activeworkout.Id,

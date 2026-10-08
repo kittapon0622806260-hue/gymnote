@@ -18,6 +18,7 @@ router.post('/', auth, async (req, res) => {
 
         // สร้าง Document ใหม่
         const newWorkout = new Workout({
+            userId: req.userId,
             title,
             day,
             target,
@@ -66,7 +67,7 @@ router.put('/:id', auth, async (req, res) => {
 router.get('/', auth, async (req, res) => {
     try {
         // ดึงข้อมูลทั้งหมดและเรียงลำดับตามเวลาที่สร้างล่าสุด
-        const workouts = await Workout.find().sort({ createdAt: -1 });
+        const workouts = await Workout.find({ userId: req.userId }).sort({ createdAt: -1 });
 
         res.status(200).json({
             success: true,
@@ -84,7 +85,7 @@ router.get('/', auth, async (req, res) => {
 
 router.get('/:id', auth, async (req, res) => {
     try {
-        const workout = await Workout.findById(req.params.id);
+        const workout = await Workout.findOne({ _id: req.params.id, userId: req.userId });
 
         if (!workout) {
             return res.status(404).json({ message: 'ไม่พบข้อมูล Routine นี้' });
@@ -98,7 +99,7 @@ router.get('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
     try {
         const { id } = req.params;
-        const deletedWorkout = await Workout.findByIdAndDelete(id);
+        const deletedWorkout = await Workout.findOneAndDelete({ _id: id, userId: req.userId });
 
         if (!deletedWorkout) {
             return res.status(404).json({
@@ -125,6 +126,7 @@ router.post('/workout-logs', auth, async (req, res) => {
         const { workoutId, title, duration, exercises, completedAt } = req.body;
 
         const newLog = new WorkoutLog({
+            userId: req.userId,
             workoutId,
             title,
             duration: duration || '00:00:00',
