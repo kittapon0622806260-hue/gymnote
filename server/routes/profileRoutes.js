@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 const auth = require('../middleware/auth');
 const User = require('../models/user');
 const WorkoutLog = require('../models/workoutLog');
@@ -19,11 +20,11 @@ function calculateStreak(workoutLogs) {
 
     const diff = Math.floor((today - lastWorkoutDate) / (1000 * 60 * 60 * 24));
 
-    if (diffDaysFromToday > 2) {
+    if (diff > 2) {
         return 0;
     }
 
-    let streak = 1;
+    let streak = 0;
     for (let i = 0; i < dates.lenght - 1; i++) {
         const currentDate = new Date(dates[i]);
         const previousDate = new Date(dates[i + 1]);
@@ -36,14 +37,14 @@ function calculateStreak(workoutLogs) {
 
         if (diffDay === 1) {
             streak++;
-        } else if (diffDay === 2 ) {
+        } else if (diffDay === 2) {
             streak++;
         } else {
             break;
         }
     }
 
-    return streak ;
+    return streak;
 }
 
 
@@ -59,34 +60,58 @@ router.get('/profile', auth, async (req, res) => {
             data: user
         });
     } catch (error) {
+        console.log(error)
         res.status(500).json({ message: error.message });
     }
 })
 
-router.get('/status', auth, async (req, res) => {
+router.get('/stats', auth, async (req, res) => {
     try {
-        const logs = await WorkoutLog.find({ userId: req.userId })
-
-
-        const totalworkouts = logs.lenght;
+        const logs = await WorkoutLog.find({ userId: req.userId });
+        const totalWorkouts = logs.length;
 
         let totalVolume = 0;
         logs.forEach(log => {
-            if (logs.exercises && Array.isArray(log.exercises)) {
-                logs.exercises.forEach(exercise => {
-                    if (exercise.set && Array.isArray(exercise.sets)) {
+            if (log.exercises && Array.isArray(log.exercises)) {
+                log.exercises.forEach(exercise => {
+                    if (exercise.sets && Array.isArray(exercise.sets)) {
                         exercise.sets.forEach(set => {
                             const weight = Number(set.weight) || 0;
-                            const reps = NUmber(set.reps) || 0;
-                            totalVolume += weight * reps
-                        })
+                            const reps = Number(set.reps) || 0;
+                            totalVolume += weight * reps;
+                        });
                     }
-                })
+                });
             }
-        })
+        });
 
         const streak = calculateStreak(logs);
+
+        res.json({
+            success: true,
+            data: {
+                totalWorkouts,
+                totalVolume,
+                streak
+            }
+        });
     } catch (error) {
+        console.error('Error details:', error);
         res.status(500).json({ message: 'เกิดข้อผิดพลาดในการคำนวณสถิติ', error: error.message });
     }
+});
+
+
+router.delete('/account', auth, async (req, res) => {
+    try {
+        await WorkoutLog.deleteMany({ userId: req.userId });
+        await User.findByIdAndDelete(req.userId);
+
+        return res.status(200).json({ success: true, message: 'ลบบัญชีสำเร็จแล้ว' });
+    } catch (error) {
+        console.error('Delete account error:', error);
+        res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการลบบัญชี' });
+    }
+
 })
+module.exports = router;
