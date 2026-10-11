@@ -13,34 +13,32 @@
     <title>GymNote-Workouts</title>
     <link rel="icon" type="image/svg+xml" href="../assets/db.svg">
     <style>
-        /* ซ่อน Scrollbar แนวนอนทั้งหมดในหน้านี้ */
         ::-webkit-scrollbar {
             display: none;
         }
 
         * {
             -ms-overflow-style: none;
-            /* IE and Edge */
             scrollbar-width: none;
-            /* Firefox */
         }
     </style>
 </head>
 
-<body class="m-0 p-0 box-border font-sans">
-    <main class="grid grid-cols-[285px_1fr]  min-h-screen">
+<body class="m-0 p-0 box-border font-sans bg-[#090B10] text-slate-100 min-h-screen">
+    <main class="grid grid-cols-1 md:grid-cols-[285px_1fr] min-h-screen">
         <load src="/src/components/sidebar.html" />
-        <section class="bg-[#090B10] min-h-screen pb-32 p-8 min-w-0">
-            <div class="flex items-center justify-between pb-7 border-b-1 border-[#8F9CAE]/10">
+        <section class="bg-[#090B10] min-h-screen pb-32 p-4 sm:p-6 md:p-8 min-w-0">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 sm:pb-7 border-b border-[#8F9CAE]/10 gap-2">
                 <div>
-                    <span class="text-[#fff] text-xl font-bold">Workouts</span>
-                    <div id="date-now" class="text-sm"></div>
+                    <span class="text-white text-xl font-bold">Workouts</span>
+                    <div id="date-now" class="text-sm text-slate-400"></div>
                 </div>
             </div>
-            <div class="flex items-center justify-between p-5 mt-7 ml-6 ">
-                <div class="text-[#fff] text-5xl font-bold">Let's gooo!</div>
+
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 sm:mt-7 mb-2">
+                <div class="text-white text-3xl sm:text-4xl md:text-5xl font-bold">Let's gooo!</div>
                 <a href="create.html"
-                    class=" inline-flex items-center gap-2 p-4 bg-[#22C55E] hover:bg-[#1ea34d] text-black font-semibold text-sm rounded-lg transition duration-200">
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 p-3.5 sm:p-4 bg-[#22C55E] hover:bg-[#1ea34d] text-black font-semibold text-sm rounded-xl transition duration-200 shrink-0">
                     <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2.5">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -48,14 +46,15 @@
                     Add Workout
                 </a>
             </div>
-            <div class="flex items-center gap-2 mt-8 ">
+
+            <div class="flex items-center gap-2 mt-6 sm:mt-8">
                 <div class="text-xl font-bold text-white tracking-wide">Saved Routines</div>
             </div>
-            <div id="empty" class="space-y-4 mt-5">
 
+            <div id="empty" class="space-y-4 mt-4 sm:mt-5">
                 <!-- Empty State Container -->
                 <div
-                    class="w-full bg-[#06080C] border border-dashed border-[#8F9CAE]/20 rounded-xl p-10 flex flex-col items-center justify-center text-center space-y-4">
+                    class="w-full bg-[#06080C] border border-dashed border-[#8F9CAE]/20 rounded-2xl p-6 sm:p-10 flex flex-col items-center justify-center text-center space-y-4">
 
                     <!-- Icon Box -->
                     <div class="p-4 bg-[#8F9CAE]/10 rounded-full text-[#8F9CAE]">
@@ -64,41 +63,38 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
                         </svg>
-
                     </div>
 
                     <!-- Text Information -->
                     <div class="space-y-1">
-                        <h3 class="text-white font-medium text-lg">ยังไม่มีรายการออกกำลังกาย</h3>
-                        <p class="text-[#8F9CAE] text-sm max-w-sm">
+                        <h3 class="text-white font-medium text-base sm:text-lg">ยังไม่มีรายการออกกำลังกาย</h3>
+                        <p class="text-[#8F9CAE] text-xs sm:text-sm max-w-sm">
                             เริ่มต้นด้วยการเพิ่มตารางออกกำลังกายแรกของคุณเพื่อจัดสรรการซ้อมในแต่ละวัน
                         </p>
                     </div>
 
                     <!-- Action Button -->
                     <a href="create.html"
-                        class="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#22C55E] hover:bg-[#1ea34d] text-black font-semibold text-sm rounded-lg transition duration-200">
+                        class="mt-2 inline-flex items-center gap-2 px-4 py-2.5 bg-[#22C55E] hover:bg-[#1ea34d] text-black font-semibold text-sm rounded-xl transition duration-200">
                         <svg xmlns="http://www.w3.org/2000/svg" class="size-4" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                         Add Workout
                     </a>
-
                 </div>
-
             </div>
 
             <!-- Edit Routine Modal -->
             <div id="edit-modal"
-                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
+                class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-sm hidden transition-opacity duration-200">
 
                 <!-- Modal Container -->
                 <div
                     class="w-full max-w-lg bg-[#0F172A] border-2 border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
 
                     <!-- Modal Header -->
-                    <div class="flex items-center justify-between p-5 border-b border-slate-700/80 bg-slate-900/50">
+                    <div class="flex items-center justify-between p-4 sm:p-5 border-b border-slate-700/80 bg-slate-900/50">
                         <div class="flex items-center gap-2.5">
                             <div class="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -107,21 +103,21 @@
                                         d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                 </svg>
                             </div>
-                            <h3 class="text-lg font-bold text-white tracking-wide">Edit Routine</h3>
+                            <h3 class="text-base sm:text-lg font-bold text-white tracking-wide">Edit Routine</h3>
                         </div>
 
                         <!-- Close Button -->
                         <button type="button" id="close-edit-modal-btn"
                             class="text-slate-400 hover:text-rose-400 p-1.5 rounded-lg hover:bg-slate-800 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                stroke="currentColor" class="size-6">
+                                stroke="currentColor" class="size-5 sm:size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
                         </button>
                     </div>
 
                     <!-- Modal Form Body -->
-                    <form id="edit-workout-form" class="p-6 space-y-5 overflow-y-auto custom-scrollbar">
+                    <form id="edit-workout-form" class="p-4 sm:p-6 space-y-4 sm:space-y-5 overflow-y-auto custom-scrollbar">
                         <!-- Hidden Input for ID -->
                         <input type="hidden" id="edit-workout-id" value="">
 
@@ -134,7 +130,7 @@
                         </div>
 
                         <!-- Target & Day Row -->
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label
                                     class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Target
@@ -184,12 +180,12 @@
                         <!-- Modal Footer Action Buttons -->
                         <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-700/80">
                             <button type="button" id="cancel-edit-btn"
-                                class="px-5 py-2.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
+                                class="px-4 sm:px-5 py-2.5 rounded-xl font-bold text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-colors">
                                 Cancel
                             </button>
 
                             <button type="submit"
-                                class="px-5 py-2.5 rounded-xl font-bold text-sm bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-colors shadow-lg shadow-emerald-500/20 active:scale-95">
+                                class="px-4 sm:px-5 py-2.5 rounded-xl font-bold text-sm bg-emerald-500 hover:bg-emerald-400 text-slate-950 transition-colors shadow-lg shadow-emerald-500/20 active:scale-95 cursor-pointer">
                                 Save Changes
                             </button>
                         </div>
@@ -198,16 +194,15 @@
                 </div>
             </div>
 
+            <!-- Delete Routine Modal -->
             <div id="delete-modal"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm hidden">
-
+                class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm hidden">
 
                 <div
-                    class="bg-[#0F172A] border-2 border-slate-700/80 rounded-2xl p-6 w-[90%] max-w-md shadow-2xl space-y-5">
-
+                    class="bg-[#0F172A] border-2 border-slate-700/80 rounded-2xl p-5 sm:p-6 w-full max-w-md shadow-2xl space-y-4 sm:space-y-5 mx-auto">
 
                     <div class="flex items-center gap-3">
-                        <div class=" p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500">
+                        <div class="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-500 shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -215,39 +210,42 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-black text-white tracking-wide">Delete Routine?</h3>
+                            <h3 class="text-base sm:text-lg font-black text-white tracking-wide">Delete Routine?</h3>
                             <p class="text-xs text-slate-400">การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
                         </div>
                     </div>
 
-
-                    <p class="text-sm text-slate-300 leading-relaxed">
+                    <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
                         คุณแน่ใจใช่ไหมว่าต้องการลบตารางออกกำลังกายนี้?
                         ข้อมูลท่าฝึกทั้งหมดในนี้จะถูกลบออกจากระบบอย่างถาวร
                     </p>
 
                     <div class="flex items-center justify-end gap-3 pt-2">
                         <button id="cancel-delete-btn" type="button"
-                            class="px-4 py-2 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 text-xs font-bold rounded-xl border border-slate-700 transition-all duration-200">
+                            class="px-4 py-2 bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-300 text-xs font-bold rounded-xl border border-slate-700 transition-all cursor-pointer">
                             ยกเลิก
                         </button>
 
                         <button id="confirm-delete-btn" type="button"
-                            class="px-4 py-2 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white text-xs font-bold rounded-xl shadow-lg shadow-rose-600/30 transition-all duration-200">
+                            class="px-4 py-2 bg-rose-600 hover:bg-rose-500 active:scale-95 text-white text-xs font-bold rounded-xl shadow-lg shadow-rose-600/30 transition-all cursor-pointer">
                             ยืนยันลบข้อมูล
                         </button>
                     </div>
 
                 </div>
             </div>
-            <div id="workouts-container" class="w-full overflow-x-auto pb-4 mt-10 scrollbar-thin">
-                <div id="workout-container" class="flex gap-4 w-max">
+
+            <!-- Saved Routines Horizontal Scroll Container -->
+            <div id="workouts-container" class="w-full overflow-x-auto pb-4 mt-6 sm:mt-8 scrollbar-thin">
+                <div id="workout-container" class="flex gap-4 w-max min-w-full pb-2">
                 </div>
             </div>
-            <div class="flex justify-between items-center mt-10 mb-4">
+
+            <!-- Weekly Schedule Section -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-8 sm:mt-10 mb-4">
                 <div class="text-xl font-bold text-white tracking-wide">Weekly Schedule</div>
                 <button onclick="toggleEditMode()" id="editBtn"
-                    class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
+                    class="w-full sm:w-auto text-center bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition cursor-pointer">
                     แก้ไขตาราง
                 </button>
             </div>
@@ -256,163 +254,161 @@
 
                 <!-- Monday -->
                 <div id="card-mon"
-                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-5">
-                        <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
+                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 sm:gap-5 min-w-0 flex-1">
+                        <div class="shrink-0 text-center w-12 py-1.5 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">MON</span>
                         </div>
-                        <!-- โหมด View -->
-                        <div id="view-mon" class="space-y-1">
-                            <h4 id="title-mon" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
-                            <p id="desc-mon" class="text-xs text-[#8F9CAE]">-</p>
+                        <div id="view-mon" class="min-w-0 flex-1 space-y-0.5">
+                            <h4 id="title-mon" class="font-bold text-sm text-white truncate">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-mon" class="text-xs text-[#8F9CAE] truncate">-</p>
                         </div>
-                        <!-- โหมด Edit (ซ่อนไว้ตอนแรก) -->
-                        <div id="edit-mon" class="hidden">
+                        <div id="edit-mon" class="hidden min-w-0 flex-1">
                             <select id="select-mon"
-                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full max-w-xs bg-gray-800 text-white text-xs sm:text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="">-- เลือกโปรแกรม --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-end gap-2 shrink-0">
                         <div id="action-mon"></div>
                     </div>
                 </div>
 
                 <!-- Tuesday -->
                 <div id="card-tue"
-                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-5">
-                        <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
+                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 sm:gap-5 min-w-0 flex-1">
+                        <div class="shrink-0 text-center w-12 py-1.5 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">TUE</span>
                         </div>
-                        <div id="view-tue" class="space-y-1">
-                            <h4 id="title-tue" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
-                            <p id="desc-tue" class="text-xs text-[#8F9CAE]">-</p>
+                        <div id="view-tue" class="min-w-0 flex-1 space-y-0.5">
+                            <h4 id="title-tue" class="font-bold text-sm text-white truncate">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-tue" class="text-xs text-[#8F9CAE] truncate">-</p>
                         </div>
-                        <div id="edit-tue" class="hidden">
+                        <div id="edit-tue" class="hidden min-w-0 flex-1">
                             <select id="select-tue"
-                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full max-w-xs bg-gray-800 text-white text-xs sm:text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="">-- เลือกโปรแกรม --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-end gap-2 shrink-0">
                         <div id="action-tue"></div>
                     </div>
                 </div>
 
                 <!-- Wednesday -->
                 <div id="card-wed"
-                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-5">
-                        <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
+                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 sm:gap-5 min-w-0 flex-1">
+                        <div class="shrink-0 text-center w-12 py-1.5 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">WED</span>
                         </div>
-                        <div id="view-wed" class="space-y-1">
-                            <h4 id="title-wed" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
-                            <p id="desc-wed" class="text-xs text-[#8F9CAE]">-</p>
+                        <div id="view-wed" class="min-w-0 flex-1 space-y-0.5">
+                            <h4 id="title-wed" class="font-bold text-sm text-white truncate">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-wed" class="text-xs text-[#8F9CAE] truncate">-</p>
                         </div>
-                        <div id="edit-wed" class="hidden">
+                        <div id="edit-wed" class="hidden min-w-0 flex-1">
                             <select id="select-wed"
-                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full max-w-xs bg-gray-800 text-white text-xs sm:text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="">-- เลือกโปรแกรม --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-end gap-2 shrink-0">
                         <div id="action-wed"></div>
                     </div>
                 </div>
 
                 <!-- Thursday -->
                 <div id="card-thu"
-                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-5">
-                        <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
+                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 sm:gap-5 min-w-0 flex-1">
+                        <div class="shrink-0 text-center w-12 py-1.5 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">THU</span>
                         </div>
-                        <div id="view-thu" class="space-y-1">
-                            <h4 id="title-thu" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
-                            <p id="desc-thu" class="text-xs text-[#8F9CAE]">-</p>
+                        <div id="view-thu" class="min-w-0 flex-1 space-y-0.5">
+                            <h4 id="title-thu" class="font-bold text-sm text-white truncate">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-thu" class="text-xs text-[#8F9CAE] truncate">-</p>
                         </div>
-                        <div id="edit-thu" class="hidden">
+                        <div id="edit-thu" class="hidden min-w-0 flex-1">
                             <select id="select-thu"
-                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full max-w-xs bg-gray-800 text-white text-xs sm:text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="">-- เลือกโปรแกรม --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-end gap-2 shrink-0">
                         <div id="action-thu"></div>
                     </div>
                 </div>
 
                 <!-- Friday -->
                 <div id="card-fri"
-                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-5">
-                        <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
+                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 sm:gap-5 min-w-0 flex-1">
+                        <div class="shrink-0 text-center w-12 py-1.5 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">FRI</span>
                         </div>
-                        <div id="view-fri" class="space-y-1">
-                            <h4 id="title-fri" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
-                            <p id="desc-fri" class="text-xs text-[#8F9CAE]">-</p>
+                        <div id="view-fri" class="min-w-0 flex-1 space-y-0.5">
+                            <h4 id="title-fri" class="font-bold text-sm text-white truncate">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-fri" class="text-xs text-[#8F9CAE] truncate">-</p>
                         </div>
-                        <div id="edit-fri" class="hidden">
+                        <div id="edit-fri" class="hidden min-w-0 flex-1">
                             <select id="select-fri"
-                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full max-w-xs bg-gray-800 text-white text-xs sm:text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="">-- เลือกโปรแกรม --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-end gap-2 shrink-0">
                         <div id="action-fri"></div>
                     </div>
                 </div>
 
                 <!-- Saturday -->
                 <div id="card-sat"
-                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-5">
-                        <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
+                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 sm:gap-5 min-w-0 flex-1">
+                        <div class="shrink-0 text-center w-12 py-1.5 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">SAT</span>
                         </div>
-                        <div id="view-sat" class="space-y-1">
-                            <h4 id="title-sat" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
-                            <p id="desc-sat" class="text-xs text-[#8F9CAE]">-</p>
+                        <div id="view-sat" class="min-w-0 flex-1 space-y-0.5">
+                            <h4 id="title-sat" class="font-bold text-sm text-white truncate">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-sat" class="text-xs text-[#8F9CAE] truncate">-</p>
                         </div>
-                        <div id="edit-sat" class="hidden">
+                        <div id="edit-sat" class="hidden min-w-0 flex-1">
                             <select id="select-sat"
-                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full max-w-xs bg-gray-800 text-white text-xs sm:text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="">-- เลือกโปรแกรม --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-end gap-2 shrink-0">
                         <div id="action-sat"></div>
                     </div>
                 </div>
 
                 <!-- Sunday -->
                 <div id="card-sun"
-                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-4 flex items-center justify-between">
-                    <div class="flex items-center gap-5">
-                        <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
+                    class="bg-[#06080C]/60 border border-white/5 rounded-xl p-3.5 sm:p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 sm:gap-5 min-w-0 flex-1">
+                        <div class="shrink-0 text-center w-12 py-1.5 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">SUN</span>
                         </div>
-                        <div id="view-sun" class="space-y-1">
-                            <h4 id="title-sun" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
-                            <p id="desc-sun" class="text-xs text-[#8F9CAE]">-</p>
+                        <div id="view-sun" class="min-w-0 flex-1 space-y-0.5">
+                            <h4 id="title-sun" class="font-bold text-sm text-white truncate">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-sun" class="text-xs text-[#8F9CAE] truncate">-</p>
                         </div>
-                        <div id="edit-sun" class="hidden">
+                        <div id="edit-sun" class="hidden min-w-0 flex-1">
                             <select id="select-sun"
-                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full max-w-xs bg-gray-800 text-white text-xs sm:text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="">-- เลือกโปรแกรม --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-end gap-2 shrink-0">
                         <div id="action-sun"></div>
                     </div>
                 </div>
@@ -423,3 +419,5 @@
     <script src="../src/views/workout.js"></script>
     <script type="module" src="/src/components/sidebar.js"></script>
 </body>
+
+</html>

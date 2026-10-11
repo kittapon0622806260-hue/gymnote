@@ -11,30 +11,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
     rel="stylesheet">
   <title>GymNote-History</title>
-    <link rel="icon" type="image/svg+xml" href="../assets/db.svg">
+  <link rel="icon" type="image/svg+xml" href="../assets/db.svg">
 </head>
 
-<body class="m-0 p-0 box-border font-sans">
-  <main class="grid grid-cols-[285px_1fr]  min-h-screen">
+<body class="m-0 p-0 box-border font-sans bg-[#090B10] text-slate-100 min-h-screen">
+  <main class="grid grid-cols-1 md:grid-cols-[285px_1fr] min-h-screen">
     <load src="/src/components/sidebar.html" />
-    <section class="bg-[#090B10] min-h-screen pb-32 p-8">
-      <div class="flex items-center justify-between pb-7 border-b-1 border-[#8F9CAE]/10">
+    <section class="bg-[#090B10] min-h-screen pb-32 p-4 sm:p-6 md:p-8 min-w-0">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-5 sm:pb-7 border-b border-[#8F9CAE]/10 gap-2">
         <div>
-          <span class="text-[#fff] text-xl font-bold">History</span>
-          <div id="date-now" class="text-sm"></div>
+          <span class="text-white text-xl font-bold">History</span>
+          <div id="date-now" class="text-sm text-slate-400"></div>
         </div>
       </div>
-      <div class="text-white text-5xl font-bold mt-10">Workout Log</div>
+      <h1 class="text-white text-3xl sm:text-4xl md:text-5xl font-bold mt-6 sm:mt-10">Workout Log</h1>
       <div id="history-cards">
 
       </div>
     </section>
   </main>
 
-
   <script src="/src/views/history.js" type="module"></script>
   <script type="module" src="/src/components/sidebar.js"></script>
 </body>
-
 
 </html>

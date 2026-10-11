@@ -85,12 +85,12 @@ function handleCheckSet(exIdx, setIdx) {
 
 
     if (setObj.isCompleted) {
-        if (btn) btn.className = "w-8 h-8 rounded-lg bg-emerald-500 border border-emerald-300 text-slate-950 font-bold flex items-center justify-center transition-all cursor-pointer";
-        if (row) row.className = "grid grid-cols-12 gap-3 items-center bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-500/30 transition-all";
+        if (btn) btn.className = "w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-emerald-500 border border-emerald-300 text-slate-950 font-bold flex items-center justify-center transition-all cursor-pointer text-xs sm:text-sm";
+        if (row) row.className = "grid grid-cols-12 gap-1.5 sm:gap-3 items-center bg-emerald-950/40 p-2 sm:p-2.5 rounded-xl border border-emerald-500/30 transition-all";
         start();
     } else {
-        if (btn) btn.className = "w-8 h-8 rounded-lg border border-slate-600 bg-slate-800/80 text-slate-400 hover:border-slate-500 flex items-center justify-center transition-all cursor-pointer";
-        if (row) row.className = "grid grid-cols-12 gap-3 items-center bg-[#0b0f19] hover:bg-[#111827] p-2.5 rounded-xl border border-slate-800 transition-all";
+        if (btn) btn.className = "w-7 h-7 sm:w-8 sm:h-8 rounded-lg border border-slate-600 bg-slate-800/80 text-slate-400 hover:border-slate-500 flex items-center justify-center transition-all cursor-pointer text-xs sm:text-sm";
+        if (row) row.className = "grid grid-cols-12 gap-1.5 sm:gap-3 items-center bg-[#0b0f19] hover:bg-[#111827] p-2 sm:p-2.5 rounded-xl border border-slate-800 transition-all";
     }
 }
 
@@ -103,11 +103,11 @@ function renderExerciseCards(exercises) {
 
     exercises.forEach((ex, exIdx) => {
         const setsRowsHTML = ex.sets.map((set, setIdx) => `
-      <div id="set-row-${exIdx}-${setIdx}" class="grid grid-cols-12 gap-3 items-center bg-[#0b0f19] hover:bg-[#111827] p-2.5 rounded-xl border border-slate-800/80 mb-2.5 transition-all">
-        <div class="col-span-2 text-center font-black text-slate-400 text-sm tracking-wider">
+      <div id="set-row-${exIdx}-${setIdx}" class="grid grid-cols-12 gap-1.5 sm:gap-3 items-center bg-[#0b0f19] hover:bg-[#111827] p-2 sm:p-2.5 rounded-xl border border-slate-800/80 mb-2 transition-all">
+        <div class="col-span-2 text-center font-black text-slate-400 text-xs sm:text-sm tracking-wider">
           ${set.setNumber}
         </div>
-        <div class="col-span-3 text-center text-xs font-bold text-slate-500 font-mono tracking-wide">
+        <div class="col-span-3 text-center text-[11px] sm:text-xs font-bold text-slate-500 font-mono tracking-wide truncate">
           ${set.prev || '-'}
         </div>
         <div class="col-span-3">
@@ -116,21 +116,21 @@ function renderExerciseCards(exercises) {
                  placeholder="0" 
                  value="${set.weight}" 
                  oninput="updateSetData(${exIdx}, ${setIdx}, 'weight', this.value)" 
-                 class="w-full bg-[#161f32] border border-slate-700/80 focus:border-emerald-400 text-center text-white font-bold rounded-lg py-1.5 outline-none">
+                 class="w-full bg-[#161f32] border border-slate-700/80 focus:border-emerald-400 text-center text-white font-bold rounded-lg py-1 sm:py-1.5 px-1 text-xs sm:text-sm outline-none">
         </div>
         <div class="col-span-2">
           <input type="number" 
-                 id= "weight-input-${exIdx}-${setIdx}"
+                 id="reps-input-${exIdx}-${setIdx}"
                  placeholder="0" 
                  value="${set.reps}" 
                  oninput="updateSetData(${exIdx}, ${setIdx}, 'reps', this.value)" 
-                 class="w-full bg-[#161f32] border border-slate-700/80 focus:border-emerald-400 text-center text-white font-bold rounded-lg py-1.5 outline-none">
+                 class="w-full bg-[#161f32] border border-slate-700/80 focus:border-emerald-400 text-center text-white font-bold rounded-lg py-1 sm:py-1.5 px-1 text-xs sm:text-sm outline-none">
         </div>
         <div class="col-span-2 flex justify-center">
           <button type="button" 
                   id="check-btn-${exIdx}-${setIdx}" 
                   onclick="handleCheckSet(${exIdx}, ${setIdx})" 
-                  class="w-8 h-8 rounded-lg border border-slate-600 bg-slate-800/80 text-slate-400 hover:border-emerald-500 flex items-center justify-center transition-all">
+                  class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg border border-slate-600 bg-slate-800/80 text-slate-400 hover:border-emerald-500 flex items-center justify-center transition-all cursor-pointer text-xs sm:text-sm">
             ✓
           </button>
         </div>
@@ -138,14 +138,14 @@ function renderExerciseCards(exercises) {
     `).join('');
 
         container.innerHTML += `
-      <div class="bg-[#0b0f17] border border-slate-800/90 rounded-2xl p-5 mb-6 text-slate-200">
-        <div class="flex items-center justify-between mb-4 pl-1">
-          <h3 class="text-2xl font-black text-white tracking-wide uppercase">${ex.name}</h3>
-          <span class="text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full">
+      <div class="bg-[#0b0f17] border border-slate-800/90 rounded-2xl p-3.5 sm:p-5 mb-4 sm:mb-6 text-slate-200 shadow-xl">
+        <div class="flex items-center justify-between mb-3 sm:mb-4 px-1 gap-2">
+          <h3 class="text-lg sm:text-2xl font-black text-white tracking-wide uppercase truncate">${ex.name}</h3>
+          <span class="text-xs font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-2.5 sm:px-3 py-1 rounded-full shrink-0">
             ${ex.sets.length} SETS
           </span>
         </div>
-        <div class="grid grid-cols-12 gap-3 text-center text-xs font-black text-slate-400 uppercase tracking-widest mb-2 px-1">
+        <div class="grid grid-cols-12 gap-1.5 sm:gap-3 text-center text-[10px] sm:text-xs font-black text-slate-400 uppercase tracking-wider sm:tracking-widest mb-2 px-1">
           <span class="col-span-2">SET</span>
           <span class="col-span-3">PREV</span>
           <span class="col-span-3">KG</span>

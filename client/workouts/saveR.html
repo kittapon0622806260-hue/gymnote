@@ -14,56 +14,67 @@
     <link rel="icon" type="image/svg+xml" href="../assets/db.svg">
 </head>
 
-<body class="m-0 p-0 box-border font-sans bg-[#090B10]  min-h-screen font-sans">
+<body class="m-0 p-0 box-border font-sans bg-[#090B10] text-slate-100 min-h-screen">
     <!-- ================= HEADER BAR ================= -->
-    <header class="bg-[#06080C]/80 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+    <header class="bg-[#06080C]/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-0 sm:h-20 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-2.5 sm:gap-4">
 
             <!-- ฝั่งซ้าย: ปุ่ม Back + ชื่อโปรแกรม -->
-            <div class="flex items-center gap-6">
-                <!-- เปลี่ยนจาก <a> เป็น <button> เพื่อดักฟัง Event เปิด Modal -->
-                <button id="back-btn" type="button"
-                    class="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group px-3 py-1.5 rounded-xl hover:bg-slate-800/50">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" class="w-5 h-5 group-hover:-translate-x-1 transition-transform">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                    </svg>
-                    <span class="text-lg font-medium">Back</span>
-                </button>
+            <div class="flex items-center justify-between md:justify-start gap-3 sm:gap-4 min-w-0">
+                <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+                    <button id="back-btn" type="button"
+                        class="flex items-center gap-1.5 sm:gap-2 text-slate-400 hover:text-white transition-colors group px-2 sm:px-3 py-1.5 rounded-xl hover:bg-slate-800/50 shrink-0 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                        </svg>
+                        <span class="text-sm sm:text-base font-medium">Back</span>
+                    </button>
 
-                <div class="h-6 w-px bg-slate-800"></div>
+                    <div class="h-5 sm:h-6 w-px bg-slate-800 shrink-0"></div>
 
-                <!-- ชื่อ Routine & Target -->
-                <div class="flex items-baseline gap-2">
-                    <span id="title" class="text-3xl font-bold   text-[#22C55E] tracking-tight"></span>
-                    <span id="target" class="text-lg font-medium text-slate-400 ml-3"></span>
+                    <!-- ชื่อ Routine & Target -->
+                    <div class="min-w-0 truncate">
+                        <span id="title" class="text-lg sm:text-2xl md:text-3xl font-bold text-[#22C55E] tracking-tight truncate block sm:inline"></span>
+                        <span id="target" class="text-xs sm:text-sm md:text-base font-medium text-slate-400 sm:ml-2 truncate block sm:inline"></span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-3 py-1.5 rounded-2xl">
-                    <span class="text-xs text-slate-400 font-semibold">Rest Default:</span>
+
+                <!-- Mobile Finish Button -->
+                <button type="button" onclick="finishWorkout()"
+                    class="md:hidden bg-[#22C55E] hover:bg-[#1ea34d] text-slate-950 font-extrabold px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-lg shadow-emerald-500/10 transition-all active:scale-95 text-xs shrink-0 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                        stroke="currentColor" class="w-3.5 h-3.5">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 3v1.5M3 21v-6m0 0 2.77-.693a9 9 0 0 1 6.208.682l.108.054a9 9 0 0 0 6.086.71l3.114-.732a48.524 48.524 0 0 0-.005-10.499l-3.11.732a9 9 0 0 1-6.085-.711l-.108-.054a9 9 0 0 0-6.208-.682L3 4.5M3 15V4.5" />
+                    </svg>
+                    <span>Finish</span>
+                </button>
+            </div>
+
+            <!-- Controls: Rest Default + Timer + Desktop Finish Button -->
+            <div class="flex items-center justify-between md:justify-end gap-2.5 sm:gap-4">
+                <div class="flex items-center gap-1.5 sm:gap-2 bg-slate-900/90 border border-slate-800 px-2.5 sm:px-3 py-1.5 rounded-xl sm:rounded-2xl">
+                    <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Rest:</span>
                     <select id="default-rest-select" onchange="changeDefaultRestTime(this.value)"
-                        class="bg-slate-800 text-emerald-400 text-xs font-bold px-2 py-1 rounded-lg border border-slate-700 focus:outline-none cursor-pointer">
+                        class="bg-slate-800 text-emerald-400 text-xs font-bold px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-lg border border-slate-700 focus:outline-none cursor-pointer">
                         <option value="30">30s</option>
                         <option value="60" selected>60s</option>
                         <option value="90">90s</option>
                         <option value="120">120s</option>
                     </select>
                 </div>
-            </div>
-
-
-            <div class="flex items-center gap-4">
 
                 <!-- Active Workout Timer -->
                 <div
-                    class="flex items-center gap-2.5 bg-slate-900/90 border border-slate-800 px-4 py-2 rounded-2xl shadow-inner">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    class="flex items-center gap-2 bg-slate-900/90 border border-slate-800 px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl shadow-inner">
+                    <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span id="active-timer"
-                        class="font-mono text-lg font-bold text-white tracking-wider">00:00:00</span>
+                        class="font-mono text-xs sm:text-base md:text-lg font-bold text-white tracking-wider">00:00:00</span>
                 </div>
 
-
                 <button id="finish-btn" type="button" onclick="finishWorkout()"
-                    class="bg-[#22C55E] hover:bg-[#1ea34d] text-slate-950 font-extrabold px-5 py-2 rounded-2xl flex items-center gap-2 shadow-lg shadow-emerald-500/10 transition-all active:scale-95">
+                    class="hidden md:flex bg-[#22C55E] hover:bg-[#1ea34d] text-slate-950 font-extrabold px-4 sm:px-5 py-2 rounded-2xl items-center gap-2 shadow-lg shadow-emerald-500/10 transition-all active:scale-95 text-sm cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
                         stroke="currentColor" class="w-4 h-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -76,10 +87,10 @@
         </div>
     </header>
 
-
+    <!-- Exit Confirmation Modal -->
     <div id="exit-modal"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
-        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm w-full shadow-2xl transform scale-95 transition-transform duration-200"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl transform scale-95 transition-transform duration-200"
             id="modal-card">
 
             <!-- Icon เตือน -->
@@ -93,19 +104,19 @@
             </div>
 
             <!-- ข้อความ -->
-            <h3 class="text-xl font-bold text-white mb-2">ออกจากการเล่น?</h3>
-            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+            <h3 class="text-lg sm:text-xl font-bold text-white mb-2">ออกจากการเล่น?</h3>
+            <p class="text-slate-400 text-xs sm:text-sm mb-6 leading-relaxed">
                 ความก้าวหน้าในรอบนี้จะยังไม่ถูกบันทึก คุณแน่ใจหรือไม่ว่าต้องการออกจากหน้านี้?
             </p>
 
             <!-- ปุ่มกด 2 ฝั่ง -->
-            <div class="flex items-center gap-3 mt-5">
+            <div class="flex items-center gap-3">
                 <button id="cancel-exit-btn" type="button"
-                    class="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 font-semibold text-sm hover:bg-slate-800 transition-colors">
+                    class="flex-1 px-4 py-2.5 rounded-xl border border-slate-700 text-slate-300 font-semibold text-xs sm:text-sm hover:bg-slate-800 transition-colors cursor-pointer">
                     เล่นต่อ
                 </button>
                 <button id="confirm-exit-btn" type="button"
-                    class="flex-1 px-4 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 font-semibold text-sm hover:bg-rose-500 hover:text-white transition-all">
+                    class="flex-1 px-4 py-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 font-semibold text-xs sm:text-sm hover:bg-rose-500 hover:text-white transition-all cursor-pointer">
                     ออกจากหน้านี้
                 </button>
             </div>
@@ -113,17 +124,16 @@
         </div>
     </div>
 
-
-
-    <main id="exercise-container" class="p-6 max-w-4xl mx-auto space-y-6">
+    <!-- Main Exercise Sets List -->
+    <main id="exercise-container" class="p-3 sm:p-6 max-w-4xl w-full mx-auto space-y-4 sm:space-y-6 pb-20">
 
     </main>
 
     <!-- Rest Timer Modal -->
     <div id="rest-modal"
-        class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden">
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center z-50 hidden p-4">
         <div
-            class="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-sm mx-4 text-center shadow-2xl relative">
+            class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 w-full max-w-sm mx-auto text-center shadow-2xl relative">
 
             <!-- Title -->
             <div class="flex items-center justify-center mb-2">
@@ -131,35 +141,37 @@
             </div>
 
             <!-- Timer Display -->
-            <div class="my-6">
+            <div class="my-4 sm:my-6">
                 <span id="modal-timer-display"
-                    class="font-mono text-6xl font-extrabold text-white tracking-widest">01:00</span>
+                    class="font-mono text-5xl sm:text-6xl font-extrabold text-white tracking-widest">01:00</span>
             </div>
 
             <!-- Quick Add Time Buttons (+15s, +30s, +60s) -->
-            <div class="grid grid-cols-3 gap-2 mb-6">
+            <div class="grid grid-cols-3 gap-2 mb-4 sm:mb-6">
                 <button onclick="addRestTime(15)"
-                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-sm">
+                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-xs sm:text-sm cursor-pointer">
                     +15s
                 </button>
                 <button onclick="addRestTime(30)"
-                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-sm">
+                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-xs sm:text-sm cursor-pointer">
                     +30s
                 </button>
                 <button onclick="addRestTime(60)"
-                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-sm">
+                    class="bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-emerald-400 font-bold py-2 rounded-xl border border-slate-700 transition-all text-xs sm:text-sm cursor-pointer">
                     +60s
                 </button>
             </div>
 
             <!-- Skip Button -->
             <button onclick="skipRestTimer()"
-                class="w-full bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all text-base">
+                class="w-full bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-slate-950 font-bold py-2.5 sm:py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all text-sm sm:text-base cursor-pointer">
                 Skip Rest (ข้ามเวลาพัก)
             </button>
 
         </div>
     </div>
-    </div>
-    <script type="module" src="/src/views/saveR.js"> </script>
+
+    <script type="module" src="/src/views/saveR.js"></script>
 </body>
+
+</html>

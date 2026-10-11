@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
   History();
 });
@@ -48,17 +47,17 @@ function createHistoryCardHTML(log) {
   const durationText = log.duration || '00:00:00';
 
   return `
-    <div class="bg-[#111622] border border-slate-800/80 rounded-2xl p-6 shadow-xl space-y-6 mt-6">
+    <div class="bg-[#111622] border border-slate-800/80 rounded-2xl p-4 sm:p-6 shadow-xl space-y-4 sm:space-y-6 mt-4 sm:mt-6">
       
       <!-- Header การ์ด -->
-      <div class="flex items-center justify-between border-b border-slate-800/60 pb-4">
-        <div class="flex items-center gap-3">
-          <span class="w-2.5 h-2.5 rounded-full bg-[#22C55E] animate-pulse"></span>
-          <h2 class="text-xl font-black text-white tracking-wide uppercase">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800/60 pb-3 sm:pb-4 gap-2">
+        <div class="flex items-center gap-3 min-w-0">
+          <span class="w-2.5 h-2.5 rounded-full bg-[#22C55E] animate-pulse shrink-0"></span>
+          <h2 class="text-lg sm:text-xl font-black text-white tracking-wide uppercase truncate">
             ${log.title || 'WORKOUT SESSION'}
           </h2>
         </div>
-        <div class="text-right text-xs font-mono text-slate-400 space-x-2">
+        <div class="text-left sm:text-right text-xs font-mono text-slate-400 space-x-2 shrink-0">
           <span>${formattedDate}</span>
           <span class="text-slate-600">•</span>
           <span class="text-[#22C55E] font-bold">${durationText}</span>
@@ -66,7 +65,7 @@ function createHistoryCardHTML(log) {
       </div>
 
       <!-- รายการท่าทางที่เล่น -->
-      <div class="space-y-5">
+      <div class="space-y-4">
         ${(log.exercises || []).map(ex => {
     const completedSets = (ex.sets || []).filter(s => s.isCompleted || (s.weight && s.reps));
 
@@ -74,10 +73,10 @@ function createHistoryCardHTML(log) {
 
     return `
             <div class="space-y-2">
-              <h3 class="text-sm font-bold text-slate-200">${ex.name}</h3>
+              <h3 class="text-xs sm:text-sm font-bold text-slate-200">${ex.name}</h3>
               <div class="flex flex-wrap gap-2">
                 ${completedSets.map(s => `
-                  <div class="bg-[#1a2130] border border-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-mono flex items-center gap-1">
+                  <div class="bg-[#1a2130] border border-slate-800 text-slate-300 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-xs font-mono flex items-center gap-1">
                     <span class="font-bold text-white">${s.weight}kg</span>
                     <span class="text-slate-500">×</span>
                     <span>${s.reps}</span>
