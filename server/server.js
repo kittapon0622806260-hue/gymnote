@@ -11,11 +11,6 @@ const aiCoachRoutes = require('./routes/airoute');
 const path = require('path');
 
 // ให้เซิร์ฟเวอร์อ่านไฟล์จากโฟลเดอร์ client ด้านนอก
-app.use(express.static(path.join(__dirname, '../client')));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/index.html'));
-});
 
 
 const app = express();
@@ -27,7 +22,10 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-
+app.use(express.static(path.join(__dirname, '../client')));
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/index.html'));
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/workouts', workoutRoutes);
 app.use('/api/history', history);
