@@ -30,8 +30,7 @@ const workoutSchema = new mongoose.Schema({
     },
     day: {
         type: String,
-        required: [true, 'Please add a day'],
-        enum: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+        required: false, 
     },
     target: {
         type: String,

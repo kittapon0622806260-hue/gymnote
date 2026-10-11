@@ -24,7 +24,7 @@ function calculateStreak(workoutLogs) {
         return 0;
     }
 
-    let streak = 0;
+    let streak = 1 ;
     for (let i = 0; i < dates.lenght - 1; i++) {
         const currentDate = new Date(dates[i]);
         const previousDate = new Date(dates[i + 1]);

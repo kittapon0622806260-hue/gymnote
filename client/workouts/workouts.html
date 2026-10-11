@@ -10,7 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <title>gymnote</title>
+    <title>GymNote-Workouts</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/db.svg">
     <style>
         /* ซ่อน Scrollbar แนวนอนทั้งหมดในหน้านี้ */
         ::-webkit-scrollbar {
@@ -243,10 +244,15 @@
                 <div id="workout-container" class="flex gap-4 w-max">
                 </div>
             </div>
-            <div class="text-xl font-bold text-white tracking-wide mt-10">
-                Weekly Schedule
+            <div class="flex justify-between items-center mt-10 mb-4">
+                <div class="text-xl font-bold text-white tracking-wide">Weekly Schedule</div>
+                <button onclick="toggleEditMode()" id="editBtn"
+                    class="bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
+                    แก้ไขตาราง
+                </button>
             </div>
-            <div class="card-day space-y-3 mt-10">
+
+            <div class="card-day space-y-3" id="weeklyScheduleContainer">
 
                 <!-- Monday -->
                 <div id="card-mon"
@@ -255,10 +261,21 @@
                         <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">MON</span>
                         </div>
-                        <div class="space-y-1">
-                            <h4 id="title-mon" class="font-bold text-sm text-white">Push Day</h4>
-                            <p id="desc-mon" class="text-xs text-[#8F9CAE]">5 Exercises • Chest, Shoulders & Triceps</p>
+                        <!-- โหมด View -->
+                        <div id="view-mon" class="space-y-1">
+                            <h4 id="title-mon" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-mon" class="text-xs text-[#8F9CAE]">-</p>
                         </div>
+                        <!-- โหมด Edit (ซ่อนไว้ตอนแรก) -->
+                        <div id="edit-mon" class="hidden">
+                            <select id="select-mon"
+                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- เลือกโปรแกรม --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="action-mon"></div>
                     </div>
                 </div>
 
@@ -269,10 +286,19 @@
                         <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">TUE</span>
                         </div>
-                        <div class="space-y-1">
-                            <h4 id="title-tue" class="font-bold text-sm text-white">Rest & Recovery</h4>
-                            <p id="desc-tue" class="text-xs text-[#8F9CAE]">Active mobility & hydration</p>
+                        <div id="view-tue" class="space-y-1">
+                            <h4 id="title-tue" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-tue" class="text-xs text-[#8F9CAE]">-</p>
                         </div>
+                        <div id="edit-tue" class="hidden">
+                            <select id="select-tue"
+                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- เลือกโปรแกรม --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="action-tue"></div>
                     </div>
                 </div>
 
@@ -283,10 +309,19 @@
                         <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">WED</span>
                         </div>
-                        <div class="space-y-1">
-                            <h4 id="title-wed" class="font-bold text-sm text-white">Pull Day</h4>
-                            <p id="desc-wed" class="text-xs text-[#8F9CAE]">5 Exercises • Back, Traps & Biceps</p>
+                        <div id="view-wed" class="space-y-1">
+                            <h4 id="title-wed" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-wed" class="text-xs text-[#8F9CAE]">-</p>
                         </div>
+                        <div id="edit-wed" class="hidden">
+                            <select id="select-wed"
+                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- เลือกโปรแกรม --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="action-wed"></div>
                     </div>
                 </div>
 
@@ -297,10 +332,19 @@
                         <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">THU</span>
                         </div>
-                        <div class="space-y-1">
-                            <h4 id="title-thu" class="font-bold text-sm text-white">Rest & Recovery</h4>
-                            <p id="desc-thu" class="text-xs text-[#8F9CAE]">Light stretching & sauna</p>
+                        <div id="view-thu" class="space-y-1">
+                            <h4 id="title-thu" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-thu" class="text-xs text-[#8F9CAE]">-</p>
                         </div>
+                        <div id="edit-thu" class="hidden">
+                            <select id="select-thu"
+                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- เลือกโปรแกรม --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="action-thu"></div>
                     </div>
                 </div>
 
@@ -311,10 +355,19 @@
                         <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">FRI</span>
                         </div>
-                        <div class="space-y-1">
-                            <h4 id="title-fri" class="font-bold text-sm text-white">Leg Day</h4>
-                            <p id="desc-fri" class="text-xs text-[#8F9CAE]">6 Exercises • Quads, Hamstrings & Calves</p>
+                        <div id="view-fri" class="space-y-1">
+                            <h4 id="title-fri" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-fri" class="text-xs text-[#8F9CAE]">-</p>
                         </div>
+                        <div id="edit-fri" class="hidden">
+                            <select id="select-fri"
+                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- เลือกโปรแกรม --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="action-fri"></div>
                     </div>
                 </div>
 
@@ -325,10 +378,19 @@
                         <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">SAT</span>
                         </div>
-                        <div class="space-y-1">
-                            <h4 id="title-sat" class="font-bold text-sm text-white">Upper Body Power</h4>
-                            <p id="desc-sat" class="text-xs text-[#8F9CAE]">4 Exercises • Compound Power Movements</p>
+                        <div id="view-sat" class="space-y-1">
+                            <h4 id="title-sat" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-sat" class="text-xs text-[#8F9CAE]">-</p>
                         </div>
+                        <div id="edit-sat" class="hidden">
+                            <select id="select-sat"
+                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- เลือกโปรแกรม --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="action-sat"></div>
                     </div>
                 </div>
 
@@ -339,10 +401,19 @@
                         <div class="text-center w-12 py-1 px-2 bg-white/5 rounded-lg border border-white/5">
                             <span class="block font-bold text-xs text-white">SUN</span>
                         </div>
-                        <div class="space-y-1">
-                            <h4 id="title-sun" class="font-bold text-sm text-white">Rest & Recovery</h4>
-                            <p id="desc-sun" class="text-xs text-[#8F9CAE]">Full rest & meal prep</p>
+                        <div id="view-sun" class="space-y-1">
+                            <h4 id="title-sun" class="font-bold text-sm text-white">ยังไม่ได้เลือกโปรแกรม</h4>
+                            <p id="desc-sun" class="text-xs text-[#8F9CAE]">-</p>
                         </div>
+                        <div id="edit-sun" class="hidden">
+                            <select id="select-sun"
+                                class="bg-gray-800 text-white text-sm rounded-xl px-3 py-2 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                <option value="">-- เลือกโปรแกรม --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div id="action-sun"></div>
                     </div>
                 </div>
 

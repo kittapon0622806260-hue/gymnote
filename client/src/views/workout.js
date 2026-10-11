@@ -162,17 +162,16 @@ confirmDelete.addEventListener('click', async () => {
   }
 })
 
-// ดักจับการกดปุ่ม Edit จากทั้งหน้าจอ
 document.addEventListener('click', (e) => {
-  // หาปุ่มที่มี class 'edit-btn' หรือปุ่มไอคอนแก้ไขรูปดินสอ
+  
   const editBtn = e.target.closest('.edit-btn');
 
   if (editBtn) {
-    // อ่านค่า _id จาก attribute data-id ของปุ่มนั้น
+    
     const editId = editBtn.dataset.id;
 
     if (editId) {
-      // Redirect ไปยังหน้า edit.html
+  
       window.location.href = `/workouts/edit.html?id=${editId}`;
     }
   }
@@ -186,4 +185,128 @@ workoutContainer.addEventListener('click', async (e) => {
 
     window.location.href = `saveR?id=${id}`
   }
-})  
+})
+
+
+let isEditing = false;
+let allPrograms = [];
+let weeklySchedule = {}; 
+
+function toggleEditMode() {
+  isEditing = !isEditing;
+  const editBtn = document.getElementById('editBtn');
+
+  if (isEditing) {
+    editBtn.textContent = ' บันทึกตาราง';
+    editBtn.className = 'bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition';
+  } else {
+    editBtn.textContent = ' แก้ไขตาราง';
+    editBtn.className = 'bg-gray-700 hover:bg-gray-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition';
+    saveWeeklySchedule();
+  }
+
+  renderScheduleUI();
+}
+
+
+async function loadScheduleData() {
+  try {
+    const token = localStorage.getItem('token');
+
+   
+    const res = await fetch('http://localhost:5000/api/workouts', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+
+   
+    allPrograms = Array.isArray(data) ? data : (data.workouts || data.data || []);
+
+   
+    const savedSchedule = localStorage.getItem('my_weekly_schedule');
+    if (savedSchedule) {
+      weeklySchedule = JSON.parse(savedSchedule);
+    }
+
+    renderScheduleUI();
+  } catch (err) {
+    console.error("Error loading schedule data:", err);
+  }
+}
+
+function renderScheduleUI() {
+  const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+  
+  const dayMap = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const todayCode = dayMap[new Date().getDay()];
+
+  days.forEach(day => {
+    const viewEl = document.getElementById(`view-${day}`);
+    const editEl = document.getElementById(`edit-${day}`);
+    const selectEl = document.getElementById(`select-${day}`);
+    const actionEl = document.getElementById(`action-${day}`);
+    const titleEl = document.getElementById(`title-${day}`);
+    const descEl = document.getElementById(`desc-${day}`);
+
+   
+    selectEl.innerHTML = '<option value="">-- เลือกโปรแกรม --</option>';
+    allPrograms.forEach(prog => {
+      const selected = weeklySchedule[day] === prog._id ? 'selected' : '';
+      selectEl.innerHTML += `<option value="${prog._id}" ${selected}>${prog.title}</option>`;
+    });
+
+   
+    const assignedWorkoutId = weeklySchedule[day];
+    const assignedProgram = allPrograms.find(p => p._id === assignedWorkoutId);
+
+    if (assignedProgram) {
+      titleEl.textContent = assignedProgram.title;
+      descEl.textContent = `${assignedProgram.exercises ? assignedProgram.exercises.length : 0} Exercises`;
+    } else {
+      titleEl.textContent = 'พักผ่อน / ยังไม่ระบุ';
+      descEl.textContent = 'Rest & Recovery';
+    }
+
+    
+    if (isEditing) {
+      viewEl.classList.add('hidden');
+      editEl.classList.remove('hidden');
+      actionEl.innerHTML = ''; 
+    } else {
+      viewEl.classList.remove('hidden');
+      editEl.classList.add('hidden');
+
+     
+      if (day === todayCode && assignedProgram) {
+        actionEl.innerHTML = `
+                    <button onclick="startWorkout('${assignedProgram._id}')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2 rounded-xl transition shadow-lg shadow-blue-600/20">
+                        เริ่มเล่น ➔
+                    </button>
+                `;
+      } else {
+        actionEl.innerHTML = '';
+      }
+    }
+  });
+}
+
+
+function saveWeeklySchedule() {
+  const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+  days.forEach(day => {
+    const selectEl = document.getElementById(`select-${day}`);
+    weeklySchedule[day] = selectEl.value;
+  });
+
+ 
+  localStorage.setItem('my_weekly_schedule', JSON.stringify(weeklySchedule));
+}
+
+
+function startWorkout(programId) {
+  window.location.href = `saveR.html?id=${programId}`;
+}
+
+
+document.addEventListener('DOMContentLoaded', loadScheduleData);
