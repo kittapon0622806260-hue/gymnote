@@ -8,6 +8,14 @@ const dashBoard = require('./routes/dashboard');
 const authRoutes = require('./routes/authRoutes');
 const userProfile = require('./routes/profileRoutes');
 const aiCoachRoutes = require('./routes/airoute');
+const path = require('path');
+
+// ให้เซิร์ฟเวอร์อ่านไฟล์จากโฟลเดอร์ client ด้านนอก
+app.use(express.static(path.join(__dirname, '../client')));
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/index.html'));
+});
 
 
 const app = express();
