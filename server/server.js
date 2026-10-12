@@ -23,14 +23,12 @@ app.use(cors());
 app.use(express.json());
 
 
+// 1. เสิร์ฟ Static File ทั้งหมดในโฟลเดอร์ client/dist
 app.use(express.static(path.join(__dirname, '../client/dist')));
-app.get('/*', (req, res) => {
-    const filePath = path.join(__dirname, '../client/dist', req.path);
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-        }
-    });
+
+// 2. ให้ทุกเส้นทางที่ไม่มี API วิ่งกลับมาที่ index.html ของ Vite
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 app.use('/api/auth', authRoutes);
 app.use('/api/workouts', workoutRoutes);
