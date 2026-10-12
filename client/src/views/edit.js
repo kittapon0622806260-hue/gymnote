@@ -69,7 +69,7 @@ if (workoutId) {
 async function Edit(id) {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch(`http://localhost:5000/api/workouts/${id}`, {
+    const res = await fetch(`/api/workouts/${id}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}` 
@@ -163,7 +163,7 @@ if (workoutForm) {
 
     try {
       const token = localStorage.getItem('token');
-      const res = await fetch(`http://localhost:5000/api/workouts/${workoutId}`, {
+      const res = await fetch(`/api/workouts/${workoutId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -174,7 +174,7 @@ if (workoutForm) {
 
       if (res.ok) {
         alert('อัปเดตโปรแกรมออกกำลังกายเรียบร้อยแล้ว!');
-        window.location.href = 'workouts.html';
+        window.location.href = '/workouts/workouts.html';
       } else {
         const errorData = await res.json();
         alert(`เกิดข้อผิดพลาด: ${errorData.message || 'ไม่สามารถบันทึกได้'}`);

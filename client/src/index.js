@@ -1,18 +1,21 @@
 
+
 async function loadDash() {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
     try {
-        const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/dashboard', {
+        const res = await fetch('/api/dashboard', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        })
+        });
         if (!res.ok) throw new Error('Failed to fetch stats');
 
         const data = await res.json();
 
-        const timeTotal = document.getElementById('workouts-stat-time')
+        const timeTotal = document.getElementById('workouts-stat-time');
         if (timeTotal) {
             timeTotal.textContent = data.timeTotal || "0m";
         }
@@ -35,9 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const authButtons = document.getElementById('authButtons');
 
     if (token) {
-        // ถ้า Login แล้ว -> ซ่อนปุ่ม Login/Register, แสดงส่วน Profile
+        // ถ้า Login แล้ว -> ซ่อนปุ่ม Login/Register
         if (authButtons) authButtons.classList.add('hidden');
     } else {
-        window.location.href = '/login.html';
+        const currentPath = window.location.pathname.toLowerCase();
+        if (!currentPath.endsWith('login.html') && !currentPath.endsWith('register.html')) {
+            window.location.href = '/login.html';
+        }
     }
 });

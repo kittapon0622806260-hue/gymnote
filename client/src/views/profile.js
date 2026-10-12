@@ -2,12 +2,12 @@ async function fetchUser() {
     const token = localStorage.getItem('token');
 
     if (!token) {
-        window.location.href = '/login/login.html';
+        window.location.href = '/login.html';
         return;
     }
 
     try {
-        const res = await fetch('http://localhost:5000/api/user/profile', {
+        const res = await fetch('/api/user/profile', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -33,9 +33,10 @@ async function fetchUser() {
 
 async function fetchStatus() {
     const token = localStorage.getItem('token');
+    if (!token) return;
 
     try {
-        const res = await fetch('http://localhost:5000/api/user/stats', {
+        const res = await fetch('/api/user/stats', {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -74,7 +75,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
     const token = localStorage.getItem('token')
 
     try {
-        const res = await fetch('http://localhost:5000/api/user/account', {
+        const res = await fetch('/api/user/account', {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`

@@ -79,7 +79,7 @@ async function createWorkout(e) {
 
     const token = localStorage.getItem('token');
     try {
-        const response = await fetch('http://localhost:5000/api/workouts', {
+        const response = await fetch('/api/workouts', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,7 +92,7 @@ async function createWorkout(e) {
 
         if (result.success) {
             alert('สร้างตารางฝึกเรียบร้อยแล้ว');
-            window.location.href = 'workouts.html';
+            window.location.href = '/workouts/workouts.html';
         } else {
             alert(result.message || 'ไม่สามารถสร้างตารางฝึกได้');
         }

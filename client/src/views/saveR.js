@@ -5,7 +5,7 @@ let activeworkout = null;
 async function Save(id) {
     try {
         const token = localStorage.getItem('token');
-        const res = await fetch(`http://localhost:5000/api/workouts/${id}`, {
+        const res = await fetch(`/api/workouts/${id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -196,7 +196,7 @@ async function finishWorkout() {
 
     try {
         const token = localStorage.getItem('token');
-        const res = await fetch('http://localhost:5000/api/workouts/workout-logs', {
+        const res = await fetch('/api/workouts/workout-logs', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -213,7 +213,7 @@ async function finishWorkout() {
 
         if (res.ok) {
             alert('บันทึกประวัติการออกกำลังกายเรียบร้อยแล้ว!');
-            window.location.href = '/workouts.html';
+            window.location.href = '/workouts/workouts.html';
         } else {
             const errorData = await res.json();
             alert(`บันทึกไม่สำเร็จ: ${errorData.message || 'เกิดข้อผิดพลาด'}`);
@@ -256,7 +256,7 @@ if (cancle) {
 
 if (confirm) {
     confirm.addEventListener('click', () => {
-        window.location.href = 'workouts.html'
+        window.location.href = '/workouts/workouts.html';
     });
 };
 

@@ -30,7 +30,7 @@ app.use('/api/history', history);
 app.use('/api/dashboard', dashBoard)
 app.use('/api/user', userProfile)
 app.use('/api/ai', aiCoachRoutes);
-app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(express.static(path.join(__dirname, '../client/dist'), { extensions: ['html'] }));
 
 // ใช้ Regular Expression จับทุกเส้นทางเพื่อส่ง index.html สำหรับ Client-side routing
 app.get(/.*/, (req, res) => {

@@ -9,7 +9,7 @@ loginForm.addEventListener('submit', async (e) => {
 
 
     try {
-        const res = await fetch('http://localhost:5000/api/auth/login', {
+        const res = await fetch('/api/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -21,11 +21,11 @@ loginForm.addEventListener('submit', async (e) => {
         if (res.ok) {
             localStorage.setItem('token', data.token);
             alert('เข้าสู่ระบบสำเร็จ');
-            window.location.href = '/index.html'
+            window.location.href = '/index.html';
         } else {
             alert(data.message || 'เข้าสู่ระบบไม่สำเร็จ');
         }
     } catch (error) {
-        console.error(err);
+        console.error('Error during login:', error);
     }
 })

@@ -1,10 +1,11 @@
 const emptyState = document.getElementById("empty");
+
 const workoutContainer = document.getElementById("workout-container");
 
 async function fetchWorkouts() {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch('http://localhost:5000/api/workouts', {
+    const response = await fetch('/api/workouts', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -134,7 +135,7 @@ confirmDelete.addEventListener('click', async () => {
   if (workoutId) {
     try {
       const token = localStorage.getItem('token');
-      const respone = await fetch(`http://localhost:5000/api/workouts/${workoutId}`, {
+      const respone = await fetch(`/api/workouts/${workoutId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -168,7 +169,7 @@ workoutContainer.addEventListener('click', async (e) => {
   const startBtn = e.target.closest('.start-btn');
   if (startBtn) {
     const id = startBtn.dataset.id;
-    window.location.href = `saveR.html?id=${id}`;
+    window.location.href = `/workouts/saveR.html?id=${id}`;
   }
 });
 
@@ -195,7 +196,7 @@ function toggleEditMode() {
 async function loadScheduleData() {
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch('http://localhost:5000/api/workouts', {
+    const res = await fetch('/api/workouts', {
       headers: { 'Authorization': `Bearer ${token}` }
     });
     const data = await res.json();
@@ -274,7 +275,10 @@ function saveWeeklySchedule() {
 }
 
 function startWorkout(programId) {
-  window.location.href = `saveR.html?id=${programId}`;
+  window.location.href = `/workouts/saveR.html?id=${programId}`;
 }
+
+window.toggleEditMode = toggleEditMode;
+window.startWorkout = startWorkout;
 
 document.addEventListener('DOMContentLoaded', loadScheduleData);

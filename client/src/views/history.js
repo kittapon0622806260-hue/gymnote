@@ -8,7 +8,7 @@ async function History() {
 
   try {
     const token = localStorage.getItem('token');
-    const res = await fetch('http://localhost:5000/api/history', {
+    const res = await fetch('/api/history', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
