@@ -24,7 +24,7 @@ app.use(express.json());
 
 
 app.use(express.static(path.join(__dirname, '../client/dist')));
-app.get('*', (req, res) => {
+app.get('/*', (req, res) => {
     const filePath = path.join(__dirname, '../client/dist', req.path);
     res.sendFile(filePath, (err) => {
         if (err) {
