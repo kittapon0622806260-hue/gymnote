@@ -30,6 +30,7 @@ app.use('/api/history', history);
 app.use('/api/dashboard', dashBoard)
 app.use('/api/user', userProfile)
 app.use('/api/ai', aiCoachRoutes);
+app.use(express.static(path.join(__dirname, '../client/dist')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
