@@ -26,8 +26,8 @@ app.use(express.json());
 // 1. เสิร์ฟ Static File ทั้งหมดในโฟลเดอร์ client/dist
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// 2. ให้ทุกเส้นทางที่ไม่มี API วิ่งกลับมาที่ index.html ของ Vite
-app.get('*', (req, res) => {
+// 2. ใช้ Regex (/.^/) เพื่อรองรับทุกเส้นทางสำหรับ SPA โดยไม่ใช้เครื่องหมาย *
+app.get(/.^/, (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 app.use('/api/auth', authRoutes);
