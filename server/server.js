@@ -22,10 +22,15 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+app.use(express.static(path.join(__dirname, '../client/dist')));
+app.get('*', (req, res) => {
+    const filePath = path.join(__dirname, '../client/dist', req.path);
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+        }
+    });
 });
 app.use('/api/auth', authRoutes);
 app.use('/api/workouts', workoutRoutes);
