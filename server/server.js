@@ -23,11 +23,21 @@ app.use(cors());
 app.use(express.json());
 
 
-// 1. เสิร์ฟ Static File ทั้งหมดในโฟลเดอร์ client/dist
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// 2. ใช้ Regex (/.^/) เพื่อรองรับทุกเส้นทางสำหรับ SPA โดยไม่ใช้เครื่องหมาย *
-app.get(/.^/, (req, res) => {
+// ดักจับกรณีผู้ใช้พิมพ์ระบุ .html ต่อท้าย (เช่น /login.html)
+app.get('/:page.html', (req, res) => {
+    const pageName = req.params.page;
+    const filePath = path.join(__dirname, `../client/dist/${pageName}.html`);
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+        }
+    });
+});
+
+// Fallback ปกติ
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 app.use('/api/auth', authRoutes);
