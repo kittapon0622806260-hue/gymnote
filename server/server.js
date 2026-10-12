@@ -23,29 +23,16 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// ดักจับกรณีผู้ใช้พิมพ์ระบุ .html ต่อท้าย (เช่น /login.html)
-app.get('/:page.html', (req, res) => {
-    const pageName = req.params.page;
-    const filePath = path.join(__dirname, `../client/dist/${pageName}.html`);
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-        }
-    });
-});
-
-// Fallback ปกติ
-app.use((req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
-});
 app.use('/api/auth', authRoutes);
 app.use('/api/workouts', workoutRoutes);
 app.use('/api/history', history);
 app.use('/api/dashboard', dashBoard)
 app.use('/api/user', userProfile)
 app.use('/api/ai', aiCoachRoutes);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
