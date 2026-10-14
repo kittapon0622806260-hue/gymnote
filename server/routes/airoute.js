@@ -19,13 +19,15 @@ if (!process.env.GEMINI_API_KEY) {
 // เรียกใช้: await ai.models.generateContent({ model, contents, config })
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// ลำดับโมเดลสำรอง — ใช้เมื่อโมเดลหลักโอเวอร์โหลดหรือไม่ตอบสนอง
-// หมายเหตุ: 'gemini-3.8-flash' ไม่มีอยู่จริง ใช้ชื่อที่ถูกต้องด้านล่างเท่านั้น
+// ลำดับโมเดลที่ใช้งาน — ระบบ Retry จะลองตามลำดับนี้อัตโนมัติ
+// หมายเหตุ: 2.5-flash / 2.0-flash ยังใช้งานได้ปกติ (ไม่ได้ deprecate)
+//           เก็บไว้เป็น fallback เผื่อ 1.5-flash มีปัญหา
 const GEMINI_MODELS = [
-    'gemini-2.5-flash',   // โมเดลหลัก — ล่าสุดและเร็วที่สุด
-    'gemini-2.0-flash',   // fallback ชั้น 1 — stable
-    'gemini-1.5-flash',   // fallback ชั้น 2 — legacy แต่เชื่อถือได้
+    'gemini-1.5-flash',   // โมเดลหลัก — เสถียร ใช้งานได้จริง
+    'gemini-2.0-flash',   // fallback ชั้น 1 — รุ่นใหม่กว่า
+    'gemini-2.5-flash',   // fallback ชั้น 2 — ล่าสุดที่สุด
 ];
+
 
 /**
  * เรียก Gemini API พร้อมระบบ Retry อัตโนมัติและ Fallback Model
