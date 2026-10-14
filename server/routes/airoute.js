@@ -31,19 +31,21 @@ const GEMINI_MODELS = [
 /**
  * เรียก Gemini API พร้อมระบบ Retry + Exponential Backoff + Fallback Model
  *
- * Retry strategy (ต่อ 1 model):
- *   attempt 1 fail → รอ ~1s  → attempt 2
- *   attempt 2 fail → รอ ~2s  → attempt 3
- *   attempt 3 fail → รอ ~4s  → fallback ไป model ถัดไป
+ * Flow ต่อ 1 model:
+ *   503/429  attempt 1 → รอ ~1s → attempt 2 → รอ ~2s → attempt 3 → break (ลอง fallback)
+ *   404      → break ทันที (ข้ามไป fallback โดยไม่ retry)
+ *   error อื่น → throw ทันที (auth fail, quota หมด ฯลฯ)
  *
  * @param {object} baseParams - params สำหรับ generateContent (ไม่ต้องใส่ model)
  * @param {number} maxRetries - จำนวนครั้ง retry ต่อ 1 model (default 3)
  */
 async function generateContentWithRetry(baseParams, maxRetries = 3) {
     let lastError;
+    let lastErrIsOverload = false;
 
     for (const model of GEMINI_MODELS) {
         const params = { ...baseParams, model };
+        lastErrIsOverload = false;
 
         for (let attempt = 0; attempt < maxRetries; attempt++) {
             try {
@@ -57,6 +59,7 @@ async function generateContentWithRetry(baseParams, maxRetries = 3) {
                     errStatus === 503 ||
                     errStatus === 429 ||
                     err.message?.includes('503') ||
+                    err.message?.includes('UNAVAILABLE') ||
                     err.message?.includes('overloaded') ||
                     err.message?.includes('high demand') ||
                     err.message?.includes('rate limit');
@@ -64,7 +67,8 @@ async function generateContentWithRetry(baseParams, maxRetries = 3) {
                 const isNotFound =
                     errStatus === 404 ||
                     err.message?.includes('not found') ||
-                    err.message?.includes('does not exist');
+                    err.message?.includes('does not exist') ||
+                    err.message?.includes('no longer available');
 
                 if (isNotFound) {
                     // model ไม่มีอยู่ → ข้ามไป fallback ทันที ไม่เสียเวลา retry
@@ -72,17 +76,25 @@ async function generateContentWithRetry(baseParams, maxRetries = 3) {
                     break;
                 }
 
-                if (isOverloaded && attempt < maxRetries - 1) {
-                    // Exponential Backoff พร้อม jitter: 1s, 2s, 4s (±100ms random)
-                    const baseDelay = 1000 * Math.pow(2, attempt);
-                    const jitter = Math.floor(Math.random() * 200) - 100; // ±100ms
-                    const waitMs = baseDelay + jitter;
-                    console.warn(`[AI Coach] Model "${model}" overloaded. Exponential backoff: ${waitMs}ms (attempt ${attempt + 1})`);
-                    await new Promise(resolve => setTimeout(resolve, waitMs));
-                    continue;
+                if (isOverloaded) {
+                    lastErrIsOverload = true;
+                    if (attempt < maxRetries - 1) {
+                        // Exponential Backoff พร้อม jitter: ~1s, ~2s (±100ms random)
+                        const baseDelay = 1000 * Math.pow(2, attempt);
+                        const jitter = Math.floor(Math.random() * 200) - 100;
+                        const waitMs = baseDelay + jitter;
+                        console.warn(`[AI Coach] Model "${model}" overloaded. Backoff ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})`);
+                        await new Promise(resolve => setTimeout(resolve, waitMs));
+                        continue;
+                    } else {
+                        // ✅ FIX: retry หมดแล้ว → break ออกจาก inner loop เพื่อลอง fallback
+                        //    (ไม่ throw เพราะจะออกจาก GEMINI_MODELS loop ด้วย!)
+                        console.warn(`[AI Coach] Model "${model}" still overloaded after ${maxRetries} attempts. Switching to next fallback...`);
+                        break;
+                    }
                 }
 
-                // error ประเภทอื่น (auth, quota, etc.) → throw ออกทันที ไม่เสียเวลา
+                // error ประเภทอื่น (auth fail, quota หมด ฯลฯ) → throw ออกทันที
                 throw err;
             }
         }
@@ -90,6 +102,8 @@ async function generateContentWithRetry(baseParams, maxRetries = 3) {
 
     // ทุก model และทุก retry หมดแล้ว ยังไม่ได้คำตอบ
     console.error('[AI Coach] All models and retries exhausted. Last error:', lastError);
+    lastError._allModelsExhausted = true;
+    lastError._wasOverload = lastErrIsOverload;
     throw lastError;
 }
 
@@ -170,7 +184,22 @@ router.post('/chat', auth, async (req, res) => {
         // Log รายละเอียดแบบ Full เพื่อ debug ใน Terminal/Server Log
         console.error('[AI Coach Error Full Details]:', err);
 
-        // ส่ง error details ครบถ้วนกลับ client — message + stack เพื่อ debug ได้ทันที
+        const errStatus = err.status || err.statusCode;
+        const isOverload =
+            err._wasOverload ||
+            errStatus === 503 ||
+            err.message?.includes('503') ||
+            err.message?.includes('UNAVAILABLE') ||
+            err.message?.includes('high demand');
+
+        // ส่ง message ที่เป็นมิตรกับผู้ใช้ — ไม่ expose raw error JSON
+        if (isOverload) {
+            return res.status(503).json({
+                success: false,
+                message: '🔄 AI กำลังมีผู้ใช้งานจำนวนมาก กรุณารอสักครู่แล้วลองใหม่อีกครั้งครับ'
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: err.message || 'Internal Server Error',
