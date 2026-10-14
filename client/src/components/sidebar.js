@@ -177,18 +177,31 @@ if (aiChatForm) {
         body: JSON.stringify({ message })
       });
 
+      // แปลง response เป็น JSON เสมอ ก่อนตรวจสอบ status
       const data = await res.json();
       document.getElementById(loadingId)?.remove();
+
+      if (!res.ok) {
+        // แสดง error จริงที่ server ส่งกลับมา เพื่อ debug ได้ทันที
+        const errorMsg = data.message || data.errorDetails || `HTTP ${res.status} Error`;
+        console.error('[AI Coach Client Error]', { status: res.status, data });
+        appendMessage('ai', `⚠️ [Error ${res.status}]: ${errorMsg}`);
+        return;
+      }
 
       if (data.success) {
         appendMessage('ai', data.reply);
       } else {
-        appendMessage('ai', 'เกิดข้อผิดพลาดในการดึงข้อมูล กรุณาลองใหม่อีกครั้ง');
+        // success: false แต่ status 200 — แสดง message จาก server
+        const errorMsg = data.message || data.errorDetails || 'เกิดข้อผิดพลาดจาก AI';
+        console.error('[AI Coach] Server returned success:false', data);
+        appendMessage('ai', `⚠️ ${errorMsg}`);
       }
     } catch (err) {
-      console.error(err);
+      // Network error หรือ JSON parse error
+      console.error('[AI Coach Network/Parse Error]', err);
       document.getElementById(loadingId)?.remove();
-      appendMessage('ai', 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้');
+      appendMessage('ai', `⚠️ ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้: ${err.message}`);
     }
   });
 }

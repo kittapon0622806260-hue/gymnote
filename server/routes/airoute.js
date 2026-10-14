@@ -69,7 +69,8 @@ router.post('/chat', auth, async (req, res) => {
         // 3. รวม context และคำถามเป็น message เดียวเพื่อความถูกต้องของ API
         const userPrompt = `ประวัติการเล่นล่าสุดของฉัน: ${JSON.stringify(workoutHistory)}\n\nคำถามของฉัน: ${message.trim()}`;
 
-        // 4. เรียกใช้งาน Gemini API (ชื่อ model ที่ถูกต้อง: gemini-2.5-flash)
+        // 4. เรียกใช้งาน Gemini API
+        // Model ที่รองรับ: 'gemini-2.5-flash' (ล่าสุด) หรือ 'gemini-2.0-flash' (stable)
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: userPrompt,
@@ -91,16 +92,16 @@ router.post('/chat', auth, async (req, res) => {
 
         res.json({ success: true, reply: replyText });
 
-    } catch (error) {
+    } catch (err) {
         // Log รายละเอียดแบบ Full เพื่อ debug ใน Terminal/Server Log
-        console.error('[AI Coach Error Full Details]:', error);
+        console.error('[AI Coach Error Full Details]:', err);
 
-        // ส่ง error details ครบถ้วนกลับ client เพื่อ debug ได้ทันที
+        // ส่ง error details ครบถ้วนกลับ client — message + stack เพื่อ debug ได้ทันที
         res.status(500).json({
             success: false,
-            message: error.message || 'Internal Server Error',
-            errorName: error.name,
-            errorDetails: error.stack || String(error)
+            message: err.message || 'Internal Server Error',
+            errorName: err.name,
+            stack: err.stack || String(err)
         });
     }
 });
