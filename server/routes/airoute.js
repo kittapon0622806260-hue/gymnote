@@ -20,12 +20,12 @@ if (!process.env.GEMINI_API_KEY) {
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // ลำดับโมเดลที่ใช้งาน — ระบบ Retry จะลองตามลำดับนี้อัตโนมัติ
-// ⚠️ IMPORTANT: 'gemini-3.8-flash' ไม่มีอยู่จริง → จะ Error 404 ทันที
-// รายชื่อที่ถูกต้องและใช้งานได้จริงมีเพียงด้านล่างนี้
+// gemini-3.8-flash = โมเดลล่าสุดที่ Google API แนะนำ (ยืนยันจาก API error response)
+// gemini-2.5-flash = ไม่รองรับ user ใหม่แล้ว (deprecated)
 const GEMINI_MODELS = [
-    'gemini-1.5-flash',   // โมเดลหลัก — เสถียร ใช้งานได้จริง
-    'gemini-2.0-flash',   // fallback ชั้น 1 — รุ่นใหม่กว่า
-    'gemini-2.5-flash',   // fallback ชั้น 2 — ล่าสุดที่สุด
+    'gemini-3.8-flash',   // โมเดลหลัก — ล่าสุด (ยืนยันจาก Google API)
+    'gemini-2.0-flash',   // fallback ชั้น 1
+    'gemini-1.5-flash',   // fallback ชั้น 2 — legacy แต่เชื่อถือได้
 ];
 
 /**
