@@ -19,6 +19,69 @@ if (!process.env.GEMINI_API_KEY) {
 // เรียกใช้: await ai.models.generateContent({ model, contents, config })
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
+// ลำดับโมเดลสำรอง — ใช้เมื่อโมเดลหลักโอเวอร์โหลดหรือไม่ตอบสนอง
+// หมายเหตุ: 'gemini-3.8-flash' ไม่มีอยู่จริง ใช้ชื่อที่ถูกต้องด้านล่างเท่านั้น
+const GEMINI_MODELS = [
+    'gemini-2.5-flash',   // โมเดลหลัก — ล่าสุดและเร็วที่สุด
+    'gemini-2.0-flash',   // fallback ชั้น 1 — stable
+    'gemini-1.5-flash',   // fallback ชั้น 2 — legacy แต่เชื่อถือได้
+];
+
+/**
+ * เรียก Gemini API พร้อมระบบ Retry อัตโนมัติและ Fallback Model
+ * @param {object} baseParams - params สำหรับ generateContent (ไม่ต้องใส่ model)
+ * @param {number} maxRetries - จำนวนครั้ง retry ต่อ 1 model (default 3)
+ */
+async function generateContentWithRetry(baseParams, maxRetries = 3) {
+    let lastError;
+
+    for (const model of GEMINI_MODELS) {
+        const params = { ...baseParams, model };
+
+        for (let attempt = 0; attempt < maxRetries; attempt++) {
+            try {
+                console.log(`[AI Coach] Trying model: ${model} (attempt ${attempt + 1}/${maxRetries})`);
+                return await ai.models.generateContent(params);
+            } catch (err) {
+                lastError = err;
+                const errStatus = err.status || err.statusCode;
+                const isOverloaded =
+                    errStatus === 503 ||
+                    errStatus === 429 ||
+                    err.message?.includes('503') ||
+                    err.message?.includes('overloaded') ||
+                    err.message?.includes('high demand') ||
+                    err.message?.includes('rate limit');
+
+                const isNotFound =
+                    errStatus === 404 ||
+                    err.message?.includes('not found') ||
+                    err.message?.includes('does not exist');
+
+                if (isNotFound) {
+                    // model ไม่มีอยู่ → ข้ามไป fallback ทันที ไม่ต้อง retry
+                    console.warn(`[AI Coach] Model "${model}" not found. Switching to next fallback...`);
+                    break;
+                }
+
+                if (isOverloaded && attempt < maxRetries - 1) {
+                    const waitMs = 1500 * (attempt + 1); // 1.5s, 3s, 4.5s
+                    console.warn(`[AI Coach] Model "${model}" overloaded. Retrying in ${waitMs}ms... (attempt ${attempt + 1})`);
+                    await new Promise(resolve => setTimeout(resolve, waitMs));
+                    continue;
+                }
+
+                // error ประเภทอื่น → หยุด retry ของ model นี้ และ throw ออกไปทันที
+                throw err;
+            }
+        }
+    }
+
+    // ทุก model และทุก retry หมดแล้ว ยังไม่ได้คำตอบ
+    console.error('[AI Coach] All models and retries exhausted. Last error:', lastError);
+    throw lastError;
+}
+
 router.post('/chat', auth, async (req, res) => {
     try {
         // ตรวจสอบว่า API Key มีค่าก่อนประมวลผล
@@ -69,16 +132,16 @@ router.post('/chat', auth, async (req, res) => {
         // 3. รวม context และคำถามเป็น message เดียวเพื่อความถูกต้องของ API
         const userPrompt = `ประวัติการเล่นล่าสุดของฉัน: ${JSON.stringify(workoutHistory)}\n\nคำถามของฉัน: ${message.trim()}`;
 
-        // 4. เรียกใช้งาน Gemini API
-        // Model ที่รองรับ: 'gemini-2.5-flash' (ล่าสุด) หรือ 'gemini-2.0-flash' (stable)
-        const response = await ai.models.generateContent({
-            model: 'gemini-3.8-flash', 
+        // 4. เรียกใช้งาน Gemini API ผ่านระบบ Retry + Fallback
+        // จะลอง gemini-2.5-flash → gemini-2.0-flash → gemini-1.5-flash อัตโนมัติ
+        const response = await generateContentWithRetry({
             contents: userPrompt,
             config: {
                 systemInstruction: systemInstruction,
                 temperature: 0.3,
             }
         });
+
         // ตรวจสอบว่า response มีข้อความจริงก่อน return
         const replyText = response.text;
         if (!replyText) {
