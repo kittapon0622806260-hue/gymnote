@@ -8,16 +8,55 @@ const auth = require('../middleware/auth');
 
 const router = express.Router();
 
-// กำหนดค่า Google Gen AI SDK
+// ตรวจสอบ API Key ก่อนสร้าง client เพื่อป้องกัน crash ตั้งแต่ต้น
+if (!process.env.GEMINI_API_KEY) {
+    console.error('[AI Coach] CRITICAL: GEMINI_API_KEY is not set in environment variables!');
+}
+
+// กำหนดค่า Google Gen AI SDK ตามมาตรฐาน @google/genai ล่าสุด
+// นำเข้า: const { GoogleGenAI } = require('@google/genai');
+// สร้าง instance: new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
+// เรียกใช้: await ai.models.generateContent({ model, contents, config })
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 router.post('/chat', auth, async (req, res) => {
     try {
-        const { message } = req.body;
-        const userId = req.userId;
+        // ตรวจสอบว่า API Key มีค่าก่อนประมวลผล
+        if (!process.env.GEMINI_API_KEY) {
+            return res.status(503).json({
+                success: false,
+                message: 'AI service is currently unavailable. Please contact administrator.'
+            });
+        }
 
-        // 1. ดึงประวัติการออกกำลังกาย 10 รายการล่าสุด
-        const workoutHistory = await WorkoutLog.find({ userId }).sort({ date: -1 }).limit(10);
+        const { message } = req.body;
+
+        // ดึง userId อย่างปลอดภัย — รองรับทั้ง middleware ที่ set req.userId หรือ req.user
+        const userId = req.userId || req.user?._id || req.user?.id;
+        if (!userId) {
+            console.error('[AI Coach] Cannot identify user: req.userId and req.user are both missing');
+            return res.status(401).json({
+                success: false,
+                message: 'ไม่สามารถระบุตัวตนผู้ใช้ได้ กรุณา Login ใหม่อีกครั้งครับ'
+            });
+        }
+
+        // ตรวจสอบ input จากผู้ใช้
+        if (!message || typeof message !== 'string' || message.trim() === '') {
+            return res.status(400).json({
+                success: false,
+                message: 'กรุณาส่งข้อความ (message) ที่ไม่ว่างเปล่ามาด้วยครับ'
+            });
+        }
+
+        // 1. ดึงประวัติการออกกำลังกาย 10 รายการล่าสุด (ดึงอย่างปลอดภัยด้วย try/catch แยก)
+        let workoutHistory = [];
+        try {
+            workoutHistory = await WorkoutLog.find({ userId }).sort({ date: -1 }).limit(10).lean();
+        } catch (dbError) {
+            // ถ้าดึง DB ไม่ได้ ไม่ crash — ให้ AI ทำงานต่อโดยไม่มี history
+            console.error('[AI Coach] Failed to fetch WorkoutLog from DB:', dbError.message);
+        }
 
         // 2. กำหนดกฎเหล็กให้ AI
         const systemInstruction = `
@@ -27,24 +66,42 @@ router.post('/chat', auth, async (req, res) => {
         2. หากผู้ใช้ถามเรื่องอื่นที่ไม่เกี่ยวกับการออกกำลังกาย (เช่น การเมือง, เขียนโค้ด, คณิตศาสตร์, การทำอาหารทั่วไป, เรื่องส่วนตัว ฯลฯ) ให้ปฏิเสธอย่างสุภาพทันทีด้วยประโยคนี้: "ขออภัยครับ ผมตอบได้เฉพาะเรื่องเกี่ยวกับการออกกำลังกายและสุขภาพเท่านั้นครับ มีอะไรให้ผมช่วยแนะนำเกี่ยวกับการเล่นเวทหรือตารางซ้อมไหมครับ?"
         `;
 
-        // 3. เรียกใช้งาน Gemini 2.5 Flash
+        // 3. รวม context และคำถามเป็น message เดียวเพื่อความถูกต้องของ API
+        const userPrompt = `ประวัติการเล่นล่าสุดของฉัน: ${JSON.stringify(workoutHistory)}\n\nคำถามของฉัน: ${message.trim()}`;
+
+        // 4. เรียกใช้งาน Gemini API (ชื่อ model ที่ถูกต้อง: gemini-2.5-flash)
         const response = await ai.models.generateContent({
-            model: 'gemini-3.8-flash',
-            contents: [
-                { role: 'user', parts: [{ text: `ประวัติการเล่นล่าสุดของฉัน: ${JSON.stringify(workoutHistory)}` }] },
-                { role: 'user', parts: [{ text: `คำถามของฉัน: ${message}` }] }
-            ],
+            model: 'gemini-2.5-flash',
+            contents: userPrompt,
             config: {
                 systemInstruction: systemInstruction,
                 temperature: 0.3,
             }
         });
 
-        res.json({ success: true, reply: response.text });
+        // ตรวจสอบว่า response มีข้อความจริงก่อน return
+        const replyText = response.text;
+        if (!replyText) {
+            console.error('[AI Coach] Empty response from Gemini API');
+            return res.status(502).json({
+                success: false,
+                message: 'AI ไม่สามารถสร้างคำตอบได้ในขณะนี้ กรุณาลองใหม่อีกครั้งครับ'
+            });
+        }
+
+        res.json({ success: true, reply: replyText });
 
     } catch (error) {
-        console.error("AI Coach Error:", error);
-        res.status(500).json({ success: false, message: 'เกิดข้อผิดพลาดในการประมวลผลของ AI' });
+        // Log รายละเอียดแบบ Full เพื่อ debug ใน Terminal/Server Log
+        console.error('[AI Coach Error Full Details]:', error);
+
+        // ส่ง error details ครบถ้วนกลับ client เพื่อ debug ได้ทันที
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Internal Server Error',
+            errorName: error.name,
+            errorDetails: error.stack || String(error)
+        });
     }
 });
 
