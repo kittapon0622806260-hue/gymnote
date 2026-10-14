@@ -72,14 +72,13 @@ router.post('/chat', auth, async (req, res) => {
         // 4. เรียกใช้งาน Gemini API
         // Model ที่รองรับ: 'gemini-2.5-flash' (ล่าสุด) หรือ 'gemini-2.0-flash' (stable)
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash',
+            model: 'gemini-3.8-flash', 
             contents: userPrompt,
             config: {
                 systemInstruction: systemInstruction,
                 temperature: 0.3,
             }
         });
-
         // ตรวจสอบว่า response มีข้อความจริงก่อน return
         const replyText = response.text;
         if (!replyText) {
