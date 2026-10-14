@@ -72,7 +72,7 @@ router.post('/chat', auth, async (req, res) => {
         // 4. เรียกใช้งาน Gemini API
         // Model ที่รองรับ: 'gemini-2.5-flash' (ล่าสุด) หรือ 'gemini-2.0-flash' (stable)
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.0-flash',
             contents: userPrompt,
             config: {
                 systemInstruction: systemInstruction,
