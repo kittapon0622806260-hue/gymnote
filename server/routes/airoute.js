@@ -20,17 +20,22 @@ if (!process.env.GEMINI_API_KEY) {
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // ลำดับโมเดลที่ใช้งาน — ระบบ Retry จะลองตามลำดับนี้อัตโนมัติ
-// หมายเหตุ: 2.5-flash / 2.0-flash ยังใช้งานได้ปกติ (ไม่ได้ deprecate)
-//           เก็บไว้เป็น fallback เผื่อ 1.5-flash มีปัญหา
+// ⚠️ IMPORTANT: 'gemini-3.8-flash' ไม่มีอยู่จริง → จะ Error 404 ทันที
+// รายชื่อที่ถูกต้องและใช้งานได้จริงมีเพียงด้านล่างนี้
 const GEMINI_MODELS = [
     'gemini-1.5-flash',   // โมเดลหลัก — เสถียร ใช้งานได้จริง
     'gemini-2.0-flash',   // fallback ชั้น 1 — รุ่นใหม่กว่า
     'gemini-2.5-flash',   // fallback ชั้น 2 — ล่าสุดที่สุด
 ];
 
-
 /**
- * เรียก Gemini API พร้อมระบบ Retry อัตโนมัติและ Fallback Model
+ * เรียก Gemini API พร้อมระบบ Retry + Exponential Backoff + Fallback Model
+ *
+ * Retry strategy (ต่อ 1 model):
+ *   attempt 1 fail → รอ ~1s  → attempt 2
+ *   attempt 2 fail → รอ ~2s  → attempt 3
+ *   attempt 3 fail → รอ ~4s  → fallback ไป model ถัดไป
+ *
  * @param {object} baseParams - params สำหรับ generateContent (ไม่ต้องใส่ model)
  * @param {number} maxRetries - จำนวนครั้ง retry ต่อ 1 model (default 3)
  */
@@ -47,6 +52,7 @@ async function generateContentWithRetry(baseParams, maxRetries = 3) {
             } catch (err) {
                 lastError = err;
                 const errStatus = err.status || err.statusCode;
+
                 const isOverloaded =
                     errStatus === 503 ||
                     errStatus === 429 ||
@@ -61,19 +67,22 @@ async function generateContentWithRetry(baseParams, maxRetries = 3) {
                     err.message?.includes('does not exist');
 
                 if (isNotFound) {
-                    // model ไม่มีอยู่ → ข้ามไป fallback ทันที ไม่ต้อง retry
+                    // model ไม่มีอยู่ → ข้ามไป fallback ทันที ไม่เสียเวลา retry
                     console.warn(`[AI Coach] Model "${model}" not found. Switching to next fallback...`);
                     break;
                 }
 
                 if (isOverloaded && attempt < maxRetries - 1) {
-                    const waitMs = 1500 * (attempt + 1); // 1.5s, 3s, 4.5s
-                    console.warn(`[AI Coach] Model "${model}" overloaded. Retrying in ${waitMs}ms... (attempt ${attempt + 1})`);
+                    // Exponential Backoff พร้อม jitter: 1s, 2s, 4s (±100ms random)
+                    const baseDelay = 1000 * Math.pow(2, attempt);
+                    const jitter = Math.floor(Math.random() * 200) - 100; // ±100ms
+                    const waitMs = baseDelay + jitter;
+                    console.warn(`[AI Coach] Model "${model}" overloaded. Exponential backoff: ${waitMs}ms (attempt ${attempt + 1})`);
                     await new Promise(resolve => setTimeout(resolve, waitMs));
                     continue;
                 }
 
-                // error ประเภทอื่น → หยุด retry ของ model นี้ และ throw ออกไปทันที
+                // error ประเภทอื่น (auth, quota, etc.) → throw ออกทันที ไม่เสียเวลา
                 throw err;
             }
         }
@@ -83,6 +92,7 @@ async function generateContentWithRetry(baseParams, maxRetries = 3) {
     console.error('[AI Coach] All models and retries exhausted. Last error:', lastError);
     throw lastError;
 }
+
 
 router.post('/chat', auth, async (req, res) => {
     try {
